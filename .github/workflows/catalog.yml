@@ -1,0 +1,27 @@
+name: Refresh catalog
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 8 * * 1"
+
+permissions:
+  contents: read
+
+jobs:
+  refresh:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 10.0.x
+      - name: Generate enriched catalog
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: dotnet run --project tools/PowerToysRun.PluginManager.CatalogBuilder -c Release
+      - name: Upload catalog candidate
+        uses: actions/upload-artifact@v4
+        with:
+          name: catalog-candidate
+          path: catalog/catalog.json

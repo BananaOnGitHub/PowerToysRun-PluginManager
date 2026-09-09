@@ -1,0 +1,43 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    strategy:
+      matrix:
+        include:
+          - rid: win-x64
+            platform: x64
+          - rid: win-arm64
+            platform: ARM64
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 10.0.x
+      - name: Test
+        run: dotnet test tests/PowerToysRun.PluginManager.Core.Tests -c Release
+      - name: Publish manager
+        run: dotnet publish src/PowerToysRun.PluginManager.App -c Release -r ${{ matrix.rid }} --self-contained false -o artifacts/package/App
+      - name: Publish updater
+        run: dotnet publish src/PowerToysRun.PluginManager.Updater -c Release -r ${{ matrix.rid }} --self-contained false -o artifacts/package/App
+      - name: Build bootstrap plugin
+        run: dotnet publish src/PowerToysRun.PluginManager.RunPlugin -c Release -r ${{ matrix.rid }} --self-contained false -p:Platform=${{ matrix.platform }} -o artifacts/package/Bootstrap
+      - name: Assemble archive
+        shell: pwsh
+        run: |
+          Copy-Item packaging/Install.ps1 artifacts/package/Install.ps1
+          Copy-Item LICENSE artifacts/package/LICENSE
+          Compress-Archive -Path artifacts/package/* -DestinationPath artifacts/PowerToysRun-PluginManager-${{ matrix.rid }}.zip
+      - uses: actions/upload-artifact@v4
+        with:
+          name: PowerToysRun-PluginManager-${{ matrix.rid }}
+          path: artifacts/PowerToysRun-PluginManager-${{ matrix.rid }}.zip

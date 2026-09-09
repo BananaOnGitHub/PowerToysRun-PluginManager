@@ -1,0 +1,111 @@
+﻿<Window x:Class="PowerToysRun.PluginManager.App.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PowerToysRun.PluginManager.App"
+        mc:Ignorable="d"
+        Title="PowerToys Run Plugin Manager"
+        Width="1060"
+        Height="720"
+        MinWidth="760"
+        MinHeight="520"
+        WindowStartupLocation="CenterScreen"
+        Loaded="Window_Loaded">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="210" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <Border Padding="18,24" BorderThickness="0,0,1,0"
+                BorderBrush="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}">
+            <DockPanel>
+                <StackPanel>
+                    <TextBlock FontSize="21" FontWeight="SemiBold" Text="Plugin Manager" />
+                    <TextBlock Margin="0,4,0,24" Opacity="0.68" Text="for PowerToys Run" />
+                    <RadioButton x:Name="DiscoverNavigation" Padding="10" GroupName="Nav"
+                                 IsChecked="True" Tag="Discover" Content="Discover"
+                                 Checked="Navigation_Checked" />
+                    <RadioButton x:Name="InstalledNavigation" Padding="10" GroupName="Nav"
+                                 Tag="Installed" Content="Installed"
+                                 Checked="Navigation_Checked" />
+                    <RadioButton x:Name="UpdatesNavigation" Padding="10" GroupName="Nav"
+                                 Tag="Updates" Content="Updates"
+                                 Checked="Navigation_Checked" />
+                </StackPanel>
+                <TextBlock DockPanel.Dock="Bottom" FontSize="12" Opacity="0.60"
+                           TextWrapping="Wrap"
+                           Text="Changes are staged first. PowerToys only closes when you approve applying them." />
+            </DockPanel>
+        </Border>
+
+        <Grid Grid.Column="1" Margin="28,22,28,16">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <TextBlock FontSize="28" FontWeight="SemiBold" Text="{Binding PageTitle}" />
+            <TextBox Grid.Row="1" Margin="0,16,0,14"
+                     AutomationProperties.Name="Search plugins"
+                     ToolTip="Search by plugin name, author, or description"
+                     Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" />
+
+            <ListBox Grid.Row="2" ItemsSource="{Binding VisiblePlugins}"
+                     BorderThickness="0" Background="Transparent"
+                     HorizontalContentAlignment="Stretch"
+                     VirtualizingPanel.IsVirtualizing="True"
+                     VirtualizingPanel.VirtualizationMode="Recycling">
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem">
+                        <Setter Property="Padding" Value="0" />
+                        <Setter Property="Margin" Value="0,0,0,10" />
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                    </Style>
+                </ListBox.ItemContainerStyle>
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Border Padding="16" BorderThickness="1" CornerRadius="8"
+                                BorderBrush="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="56" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <Image Width="44" Height="44" Source="{Binding IconUrl}"
+                                       AutomationProperties.Name="{Binding Name, StringFormat={}{0} icon}"
+                                       Stretch="UniformToFill" />
+                                <StackPanel Grid.Column="1" Margin="12,0,20,0">
+                                    <TextBlock FontSize="16" FontWeight="SemiBold" Text="{Binding Name}" />
+                                    <TextBlock Margin="0,3,0,0" Opacity="0.66" Text="{Binding AuthorLine}" />
+                                    <TextBlock Margin="0,7,0,0" TextWrapping="Wrap"
+                                               MaxHeight="42" TextTrimming="CharacterEllipsis"
+                                               Text="{Binding Description}" />
+                                    <TextBlock Margin="0,7,0,0" FontSize="12"
+                                               FontWeight="SemiBold" Text="{Binding StatusLabel}" />
+                                </StackPanel>
+                                <StackPanel Grid.Column="2">
+                                    <Button MinWidth="92" Content="{Binding PrimaryActionLabel}"
+                                            Tag="{Binding}" IsEnabled="{Binding CanInstall}"
+                                            Click="PrimaryAction_Click" />
+                                    <Button Margin="0,7,0,0" Content="Repository"
+                                            Tag="{Binding RepositoryUrl}" Click="Repository_Click" />
+                                    <Button Margin="0,7,0,0" Content="Remove" Tag="{Binding}"
+                                            Visibility="{Binding RemoveVisibility}" Click="Remove_Click" />
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+
+            <TextBlock Grid.Row="3" Margin="0,12,0,0" Opacity="0.68"
+                       Text="{Binding StatusText}" />
+            <ProgressBar Grid.Row="3" Width="120" Height="4" HorizontalAlignment="Right"
+                         IsIndeterminate="True" Visibility="{Binding BusyVisibility}" />
+        </Grid>
+    </Grid>
+</Window>

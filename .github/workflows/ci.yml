@@ -1,0 +1,34 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 10.0.x
+      - name: Build core
+        run: dotnet build src/PowerToysRun.PluginManager.Core -c Release
+      - name: Build app
+        run: dotnet build src/PowerToysRun.PluginManager.App -c Release
+      - name: Build updater
+        run: dotnet build src/PowerToysRun.PluginManager.Updater -c Release
+      - name: Build catalog generator
+        run: dotnet build tools/PowerToysRun.PluginManager.CatalogBuilder -c Release
+      - name: Build Run plugin (x64)
+        run: dotnet build src/PowerToysRun.PluginManager.RunPlugin -c Release -p:Platform=x64
+      - name: Build Run plugin (ARM64)
+        run: dotnet build src/PowerToysRun.PluginManager.RunPlugin -c Release -p:Platform=ARM64
+      - name: Test
+        run: dotnet test tests/PowerToysRun.PluginManager.Core.Tests -c Release
+      - name: Validate catalog generation
+        shell: pwsh
+        run: |
+          dotnet run --project tools/PowerToysRun.PluginManager.CatalogBuilder -c Release -- --skip-enrichment --output artifacts/catalog.json
+          $count = (Get-Content artifacts/catalog.json | ConvertFrom-Json).plugins.Count
+          if ($count -lt 50) { throw "Catalog unexpectedly contains only $count plugins." }
