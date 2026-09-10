@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.IO;
 using Wox.Plugin;
 
 namespace Community.PowerToys.Run.Plugin.PluginManager;
