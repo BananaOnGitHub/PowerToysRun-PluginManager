@@ -54,4 +54,17 @@ public sealed class GitHubReleaseClient(HttpClient httpClient)
         return match ?? throw new InvalidOperationException(
             $"Release '{release.TagName}' does not contain a ZIP for {architecture}.");
     }
+
+    public static GitHubReleaseAsset SelectManagerInstallerAsset(
+        GitHubRelease release,
+        Architecture architecture = Architecture.X64)
+    {
+        var architectureName = architecture == Architecture.Arm64 ? "arm64" : "x64";
+        return release.Assets.FirstOrDefault(asset =>
+                   asset.Name.EndsWith(".exe", StringComparison.OrdinalIgnoreCase) &&
+                   asset.Name.Contains("setup", StringComparison.OrdinalIgnoreCase) &&
+                   asset.Name.Contains(architectureName, StringComparison.OrdinalIgnoreCase))
+               ?? throw new InvalidOperationException(
+                   $"Release '{release.TagName}' does not contain a {architectureName} setup executable.");
+    }
 }

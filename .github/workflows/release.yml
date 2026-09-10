@@ -15,8 +15,10 @@ jobs:
         include:
           - rid: win-x64
             platform: x64
+            installer_arch: x64
           - rid: win-arm64
             platform: ARM64
+            installer_arch: arm64
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
@@ -26,18 +28,35 @@ jobs:
       - name: Test
         run: dotnet test tests/PowerToysRun.PluginManager.Core.Tests -c Release
       - name: Publish manager
-        run: dotnet publish src/PowerToysRun.PluginManager.App -c Release -r ${{ matrix.rid }} --self-contained false -o artifacts/package/App
+        run: dotnet publish src/PowerToysRun.PluginManager.App -c Release -r ${{ matrix.rid }} --self-contained true -o artifacts/installer-input/App
       - name: Publish updater
-        run: dotnet publish src/PowerToysRun.PluginManager.Updater -c Release -r ${{ matrix.rid }} --self-contained false -o artifacts/package/App
+        run: dotnet publish src/PowerToysRun.PluginManager.Updater -c Release -r ${{ matrix.rid }} --self-contained true -o artifacts/installer-input/App
+      - name: Publish installer bootstrapper
+        run: dotnet publish src/PowerToysRun.PluginManager.Bootstrapper -c Release -r ${{ matrix.rid }} --self-contained true -o artifacts/installer-input/App
       - name: Build bootstrap plugin
-        run: dotnet publish src/PowerToysRun.PluginManager.RunPlugin -c Release -r ${{ matrix.rid }} --self-contained false -p:Platform=${{ matrix.platform }} -o artifacts/package/Bootstrap
-      - name: Assemble archive
+        run: dotnet publish src/PowerToysRun.PluginManager.RunPlugin -c Release -r ${{ matrix.rid }} --self-contained false -p:Platform=${{ matrix.platform }} -o artifacts/installer-input/Bootstrap
+      - name: Build setup executable
         shell: pwsh
         run: |
-          Copy-Item packaging/Install.ps1 artifacts/package/Install.ps1
-          Copy-Item LICENSE artifacts/package/LICENSE
-          Compress-Archive -Path artifacts/package/* -DestinationPath artifacts/PowerToysRun-PluginManager-${{ matrix.rid }}.zip
+          $compiler = (Get-Command ISCC.exe -ErrorAction SilentlyContinue).Source
+          if (-not $compiler) {
+            $compiler = @(
+              "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe",
+              "$env:ProgramFiles\Inno Setup 7\ISCC.exe"
+            ) | Where-Object { Test-Path $_ } | Select-Object -First 1
+          }
+          if (-not $compiler) { throw "Inno Setup compiler was not found on the runner." }
+          $version = (Select-String -Path Directory.Build.props -Pattern '<Version>([^<]+)</Version>').Matches[0].Groups[1].Value
+          & $compiler "/DMyVersion=$version" "/DMyArch=${{ matrix.installer_arch }}" "/DSourceRoot=$((Resolve-Path artifacts/installer-input).Path)" "/DOutputRoot=$((New-Item -ItemType Directory -Force artifacts/installer).FullName)" packaging/PowerToysRun.PluginManager.iss
+      - name: Assemble portable archive
+        shell: pwsh
+        run: |
+          Copy-Item packaging/Install.ps1 artifacts/installer-input/Install.ps1
+          Copy-Item LICENSE artifacts/installer-input/LICENSE
+          Compress-Archive -Path artifacts/installer-input/* -DestinationPath artifacts/PowerToysRun-PluginManager-${{ matrix.rid }}.zip
       - uses: actions/upload-artifact@v4
         with:
           name: PowerToysRun-PluginManager-${{ matrix.rid }}
-          path: artifacts/PowerToysRun-PluginManager-${{ matrix.rid }}.zip
+          path: |
+            artifacts/installer/*.exe
+            artifacts/PowerToysRun-PluginManager-${{ matrix.rid }}.zip

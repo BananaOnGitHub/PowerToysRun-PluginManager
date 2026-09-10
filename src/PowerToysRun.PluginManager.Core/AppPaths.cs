@@ -29,11 +29,14 @@ public sealed class AppPaths
 
     public string TransactionDirectory => Path.Combine(DataDirectory, "Transactions");
 
+    public string UpdateDirectory => Path.Combine(DataDirectory, "Updates");
+
     public void EnsureDataDirectories()
     {
         Directory.CreateDirectory(CacheDirectory);
         Directory.CreateDirectory(StagingDirectory);
         Directory.CreateDirectory(BackupDirectory);
         Directory.CreateDirectory(TransactionDirectory);
+        Directory.CreateDirectory(UpdateDirectory);
     }
 }

@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
     <ProjectReference Include="..\PowerToysRun.PluginManager.Core\PowerToysRun.PluginManager.Core.csproj" />
@@ -10,7 +10,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
-    <AssemblyName>PowerToysRun.PluginManager.Updater</AssemblyName>
+    <AssemblyName>PowerToysRun.PluginManager.Bootstrapper</AssemblyName>
   </PropertyGroup>
 
 </Project>

@@ -1,13 +1,13 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using System.IO;
 using System.Net.Http;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using PowerToysRun.PluginManager.App.ViewModels;
 using PowerToysRun.PluginManager.Core;
-using PowerToysRun.PluginManager.Core.Models;
 using PowerToysRun.PluginManager.Core.Services;
 
 namespace PowerToysRun.PluginManager.App;
@@ -36,6 +36,8 @@ public partial class MainWindow : Window
     {
         ApplyArguments(Environment.GetCommandLineArgs().Skip(1).ToArray());
         await _viewModel.LoadAsync();
+        var version = Assembly.GetExecutingAssembly().GetName().Version?.ToString(3) ?? "0.0.0";
+        await _viewModel.CheckForUpdateAsync(version);
     }
 
     private void Navigation_Checked(object sender, RoutedEventArgs eventArgs)
@@ -88,32 +90,24 @@ public partial class MainWindow : Window
 
     private async void PrimaryAction_Click(object sender, RoutedEventArgs eventArgs)
     {
-        if (sender is not Button { Tag: PluginCardViewModel plugin })
+        if (_viewModel.IsBusy || sender is not Button { Tag: PluginCardViewModel plugin })
         {
             return;
         }
 
-        var result = MessageBox.Show(
-            $"Download and validate {plugin.Name}, then close and restart PowerToys to apply it?",
-            "Apply plugin change",
-            MessageBoxButton.OKCancel,
-            MessageBoxImage.Information);
-        if (result != MessageBoxResult.OK)
+        if (_viewModel.UnqueueInstall(plugin))
         {
             return;
         }
 
         try
         {
-            await _viewModel.RunBusyAsync($"Staging {plugin.Name}...", async () =>
+            await _viewModel.RunBusyAsync($"Downloading and validating {plugin.Name}...", async () =>
             {
                 var releaseClient = new GitHubReleaseClient(_httpClient);
                 var staging = new PackageStagingService(_httpClient, releaseClient, _paths);
                 var package = await staging.StageLatestAsync(plugin.State.CatalogEntry);
-                var transaction = BuildInstallTransaction(plugin, package);
-                var planPath = await new TransactionPlanStore(_paths).WriteAsync(transaction);
-                StartUpdater(planPath);
-                Close();
+                _viewModel.QueueInstall(plugin, package);
             });
         }
         catch (Exception exception)
@@ -131,87 +125,105 @@ public partial class MainWindow : Window
         }
     }
 
-    private async void Remove_Click(object sender, RoutedEventArgs eventArgs)
+    private void Remove_Click(object sender, RoutedEventArgs eventArgs)
     {
-        if (sender is not Button { Tag: PluginCardViewModel plugin } ||
-            plugin.State.InstalledPlugin is null)
+        if (!_viewModel.IsBusy && sender is Button { Tag: PluginCardViewModel plugin })
+        {
+            _viewModel.ToggleRemove(plugin);
+        }
+    }
+
+    private void ClearQueue_Click(object sender, RoutedEventArgs eventArgs) =>
+        ClearQueueIfIdle();
+
+    private void ClearQueueIfIdle()
+    {
+        if (!_viewModel.IsBusy)
+        {
+            _viewModel.ClearQueue();
+        }
+    }
+
+    private async void ApplyQueue_Click(object sender, RoutedEventArgs eventArgs)
+    {
+        if (_viewModel.IsBusy || !_viewModel.HasQueuedChanges)
         {
             return;
         }
 
         var result = MessageBox.Show(
-            $"Remove {plugin.Name}? A backup will be retained by the plugin manager.",
-            "Remove plugin",
+            $"Apply these plugin changes? PowerToys will close and restart once.\n\n{_viewModel.DescribeQueue()}",
+            "Apply queued changes",
             MessageBoxButton.OKCancel,
-            MessageBoxImage.Warning);
+            MessageBoxImage.Information);
         if (result != MessageBoxResult.OK)
         {
             return;
         }
 
-        var transactionId = Guid.NewGuid();
-        var plan = new TransactionPlan
-        {
-            Id = transactionId,
-            PowerToysExecutablePath = FindPowerToysExecutable(),
-            Operations =
-            [
-                new PluginTransactionOperation
-                {
-                    Kind = PluginTransactionKind.Uninstall,
-                    PluginId = plugin.State.CatalogEntry.Id,
-                    PluginName = plugin.Name,
-                    TargetDirectory = plugin.State.InstalledPlugin.DirectoryPath,
-                    BackupDirectory = Path.Combine(_paths.BackupDirectory, transactionId.ToString("N"), SafeName(plugin.Name)),
-                },
-            ],
-        };
-
         try
         {
+            var plan = _viewModel.CreateQueuePlan(FindPowerToysExecutable());
             var planPath = await new TransactionPlanStore(_paths).WriteAsync(plan);
             StartUpdater(planPath);
             Close();
         }
         catch (Exception exception)
         {
-            MessageBox.Show(exception.Message, "Could not prepare removal", MessageBoxButton.OK, MessageBoxImage.Error);
+            MessageBox.Show(exception.Message, "Could not apply queue", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 
-    private TransactionPlan BuildInstallTransaction(PluginCardViewModel plugin, StagedPluginPackage package)
+    private async void InstallManagerUpdate_Click(object sender, RoutedEventArgs eventArgs)
     {
-        var transactionId = Guid.NewGuid();
-        var targetDirectory = plugin.State.InstalledPlugin?.DirectoryPath ??
-            Path.Combine(_paths.PluginDirectory, SafeName(package.Manifest.Name));
-        return new TransactionPlan
+        if (_viewModel.IsBusy)
         {
-            Id = transactionId,
-            PowerToysExecutablePath = FindPowerToysExecutable(),
-            Operations =
-            [
-                new PluginTransactionOperation
-                {
-                    Kind = plugin.IsInstalled ? PluginTransactionKind.Update : PluginTransactionKind.Install,
-                    PluginId = package.Manifest.Id,
-                    PluginName = package.Manifest.Name,
-                    SourceDirectory = package.PluginDirectory,
-                    TargetDirectory = targetDirectory,
-                    BackupDirectory = Path.Combine(
-                        _paths.BackupDirectory,
-                        transactionId.ToString("N"),
-                        SafeName(package.Manifest.Name)),
-                },
-            ],
-        };
+            return;
+        }
+
+        if (_viewModel.HasQueuedChanges)
+        {
+            MessageBox.Show(
+                "Apply or clear the queued plugin changes before updating the manager.",
+                "Plugin changes are queued",
+                MessageBoxButton.OK,
+                MessageBoxImage.Information);
+            return;
+        }
+
+        try
+        {
+            await _viewModel.RunBusyAsync("Downloading manager update...", async () =>
+            {
+                var installerPath = await _viewModel.DownloadUpdateAsync();
+                var startInfo = new ProcessStartInfo(installerPath) { UseShellExecute = true };
+                startInfo.ArgumentList.Add("/SP-");
+                startInfo.ArgumentList.Add("/SILENT");
+                startInfo.ArgumentList.Add("/CURRENTUSER");
+                startInfo.ArgumentList.Add("/CLOSEAPPLICATIONS");
+                startInfo.ArgumentList.Add("/NORESTARTAPPLICATIONS");
+                Process.Start(startInfo);
+                Close();
+            });
+        }
+        catch (Exception exception)
+        {
+            _viewModel.StatusText = $"Could not start the manager update: {exception.Message}";
+            MessageBox.Show(_viewModel.StatusText, "Update failed", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
     }
 
-    private static string SafeName(string value)
+    private void ViewManagerRelease_Click(object sender, RoutedEventArgs eventArgs)
     {
-        var invalid = Path.GetInvalidFileNameChars().ToHashSet();
-        var result = new string(value.Select(character => invalid.Contains(character) ? '_' : character).ToArray()).Trim();
-        return string.IsNullOrWhiteSpace(result) ? "Plugin" : result;
+        var url = _viewModel.AvailableUpdate?.ReleaseUrl;
+        if (Uri.TryCreate(url, UriKind.Absolute, out _))
+        {
+            Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
+        }
     }
+
+    private void DismissManagerUpdate_Click(object sender, RoutedEventArgs eventArgs) =>
+        _viewModel.DismissUpdate();
 
     private void StartUpdater(string planPath)
     {

@@ -47,6 +47,58 @@ public sealed class CoreTests
     }
 
     [Fact]
+    public void ManagerInstallerSelection_ChoosesSetupForRequestedArchitecture()
+    {
+        var release = new GitHubRelease
+        {
+            TagName = "v0.3.0",
+            Assets =
+            [
+                new GitHubReleaseAsset { Name = "PowerToysRun-PluginManager-Setup-win-x64.exe" },
+                new GitHubReleaseAsset { Name = "PowerToysRun-PluginManager-Setup-win-arm64.exe" },
+                new GitHubReleaseAsset { Name = "PowerToysRun-PluginManager-win-x64.zip" },
+            ],
+        };
+
+        Assert.Equal(
+            "PowerToysRun-PluginManager-Setup-win-arm64.exe",
+            GitHubReleaseClient.SelectManagerInstallerAsset(release, Architecture.Arm64).Name);
+    }
+
+    [Fact]
+    public void ChangeQueue_ReplacesSameTargetAndBuildsOneTransaction()
+    {
+        using var temporary = new TemporaryDirectory();
+        var paths = new PowerToysRun.PluginManager.Core.AppPaths(temporary.Path);
+        var target = Path.Combine(paths.PluginDirectory, "Example");
+        var queue = new PluginChangeQueue();
+        queue.Set(new PendingPluginChange
+        {
+            Kind = PluginTransactionKind.Install,
+            PluginId = "example",
+            PluginName = "Example",
+            SourceDirectory = Path.Combine(paths.StagingDirectory, "one", "payload"),
+            TargetDirectory = target,
+        });
+        queue.Set(new PendingPluginChange
+        {
+            Kind = PluginTransactionKind.Uninstall,
+            PluginId = "example",
+            PluginName = "Example",
+            TargetDirectory = target,
+        });
+
+        var plan = queue.CreatePlan(paths, "PowerToys.exe");
+
+        var operation = Assert.Single(plan.Operations);
+        Assert.Equal(PluginTransactionKind.Uninstall, operation.Kind);
+        Assert.Equal("PowerToys.exe", plan.PowerToysExecutablePath);
+        Assert.True(operation.BackupDirectory.StartsWith(
+            paths.BackupDirectory,
+            StringComparison.OrdinalIgnoreCase));
+    }
+
+    [Fact]
     public async Task Scanner_ReportsValidAndBrokenPlugins()
     {
         using var temporary = new TemporaryDirectory();

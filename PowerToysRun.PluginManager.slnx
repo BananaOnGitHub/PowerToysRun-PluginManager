@@ -1,6 +1,7 @@
 <Solution>
   <Folder Name="/src/">
     <Project Path="src/PowerToysRun.PluginManager.App/PowerToysRun.PluginManager.App.csproj" />
+    <Project Path="src/PowerToysRun.PluginManager.Bootstrapper/PowerToysRun.PluginManager.Bootstrapper.csproj" />
     <Project Path="src/PowerToysRun.PluginManager.Core/PowerToysRun.PluginManager.Core.csproj" />
     <Project Path="src/PowerToysRun.PluginManager.RunPlugin/PowerToysRun.PluginManager.RunPlugin.csproj" />
     <Project Path="src/PowerToysRun.PluginManager.Updater/PowerToysRun.PluginManager.Updater.csproj" />

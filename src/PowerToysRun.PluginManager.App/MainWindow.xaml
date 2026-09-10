@@ -50,16 +50,41 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <TextBlock FontSize="28" FontWeight="SemiBold" Text="{Binding PageTitle}" />
-            <TextBox Grid.Row="1" Margin="0,16,0,14"
+
+            <Border Grid.Row="1" Margin="0,14,0,0" Padding="12"
+                    CornerRadius="10" BorderThickness="1"
+                    BorderBrush="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"
+                    Background="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}"
+                    Visibility="{Binding UpdateVisibility}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock VerticalAlignment="Center" FontWeight="SemiBold"
+                               Text="{Binding UpdateMessage}" />
+                    <StackPanel Grid.Column="1" Orientation="Horizontal">
+                        <Button Margin="8,0,0,0" Content="View release"
+                                Click="ViewManagerRelease_Click" />
+                        <Button Margin="8,0,0,0" Style="{StaticResource PrimaryButtonStyle}"
+                                Content="Download and install" Click="InstallManagerUpdate_Click" />
+                        <Button Margin="8,0,0,0" Padding="10,7" Content="Later"
+                                Click="DismissManagerUpdate_Click" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <TextBox Grid.Row="2" Margin="0,16,0,14"
                      AutomationProperties.Name="Search plugins"
                      ToolTip="Search by plugin name, author, or description"
                      Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" />
 
-            <ListBox x:Name="PluginList" Grid.Row="2" ItemsSource="{Binding VisiblePlugins}"
+            <ListBox x:Name="PluginList" Grid.Row="3" ItemsSource="{Binding VisiblePlugins}"
                      BorderThickness="0" Background="Transparent"
                      HorizontalContentAlignment="Stretch"
                      ScrollViewer.CanContentScroll="False"
@@ -100,11 +125,11 @@
                                 <StackPanel Grid.Column="2">
                                     <Button MinWidth="104" Style="{StaticResource PrimaryButtonStyle}"
                                             Content="{Binding PrimaryActionLabel}"
-                                            Tag="{Binding}" IsEnabled="{Binding CanInstall}"
+                                            Tag="{Binding}" IsEnabled="{Binding CanUsePrimaryAction}"
                                             Click="PrimaryAction_Click" />
                                     <Button Margin="0,7,0,0" Content="Repository"
                                             Tag="{Binding RepositoryUrl}" Click="Repository_Click" />
-                                    <Button Margin="0,7,0,0" Content="Remove" Tag="{Binding}"
+                                    <Button Margin="0,7,0,0" Content="{Binding RemoveActionLabel}" Tag="{Binding}"
                                             Visibility="{Binding RemoveVisibility}" Click="Remove_Click" />
                                 </StackPanel>
                             </Grid>
@@ -113,10 +138,26 @@
                 </ListBox.ItemTemplate>
             </ListBox>
 
-            <TextBlock Grid.Row="3" Margin="0,12,0,0" Opacity="0.68"
-                       Text="{Binding StatusText}" />
-            <ProgressBar Grid.Row="3" Width="120" Height="4" HorizontalAlignment="Right"
-                         IsIndeterminate="True" Visibility="{Binding BusyVisibility}" />
+            <Grid Grid.Row="4" Margin="0,12,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <StackPanel VerticalAlignment="Center">
+                    <TextBlock Opacity="0.68" Text="{Binding StatusText}" />
+                    <ProgressBar Width="120" Height="4" Margin="0,5,0,0"
+                                 HorizontalAlignment="Left" IsIndeterminate="True"
+                                 Visibility="{Binding BusyVisibility}" />
+                </StackPanel>
+                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center"
+                            Visibility="{Binding QueueVisibility}">
+                    <TextBlock Margin="0,0,12,0" VerticalAlignment="Center" FontWeight="SemiBold"
+                               Text="{Binding QueueSummary}" />
+                    <Button Content="Clear" Click="ClearQueue_Click" />
+                    <Button Margin="8,0,0,0" Style="{StaticResource PrimaryButtonStyle}"
+                            Content="{Binding ApplyQueueLabel}" Click="ApplyQueue_Click" />
+                </StackPanel>
+            </Grid>
         </Grid>
     </Grid>
 </Window>

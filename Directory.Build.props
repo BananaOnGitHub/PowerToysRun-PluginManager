@@ -6,5 +6,6 @@
     <ContinuousIntegrationBuild Condition="'$(CI)' == 'true'">true</ContinuousIntegrationBuild>
     <RepositoryUrl>https://github.com/BananaOnGitHub/PowerToysRun-PluginManager</RepositoryUrl>
     <Authors>BananaOnGitHub and contributors</Authors>
+    <Version>0.3.0</Version>
   </PropertyGroup>
 </Project>
