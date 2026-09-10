@@ -2,7 +2,15 @@ name: CI
 
 on:
   push:
+    branches:
+      - main
   pull_request:
+    branches:
+      - main
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
@@ -35,7 +43,6 @@ jobs:
           $count = (Get-Content artifacts/catalog.json | ConvertFrom-Json).plugins.Count
           if ($count -lt 50) { throw "Catalog unexpectedly contains only $count plugins." }
       - name: Assemble x64 installer input
-        if: github.event_name == 'pull_request'
         shell: pwsh
         run: |
           $inputRoot = "artifacts/installer-input"
@@ -44,7 +51,6 @@ jobs:
           dotnet publish src/PowerToysRun.PluginManager.Bootstrapper -c Release -r win-x64 --self-contained true -o "$inputRoot/App"
           dotnet publish src/PowerToysRun.PluginManager.RunPlugin -c Release -r win-x64 --self-contained false -p:Platform=x64 -o "$inputRoot/Bootstrap"
       - name: Build x64 setup executable
-        if: github.event_name == 'pull_request'
         shell: pwsh
         run: |
           $compiler = (Get-Command ISCC.exe -ErrorAction SilentlyContinue).Source
@@ -58,7 +64,6 @@ jobs:
           $version = (Select-String -Path Directory.Build.props -Pattern '<Version>([^<]+)</Version>').Matches[0].Groups[1].Value
           & $compiler "/DMyVersion=$version" "/DMyArch=x64" "/DSourceRoot=$((Resolve-Path artifacts/installer-input).Path)" "/DOutputRoot=$((New-Item -ItemType Directory -Force artifacts/installer).FullName)" packaging/PowerToysRun.PluginManager.iss
       - name: Upload x64 test installer
-        if: github.event_name == 'pull_request'
         uses: actions/upload-artifact@v4
         with:
           name: PowerToysRun-PluginManager-Setup-win-x64-test
