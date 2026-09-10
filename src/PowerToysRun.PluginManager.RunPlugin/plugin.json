@@ -1,0 +1,14 @@
+{
+  "ID": "9A68C4D267E24E88A20DF0E199C50E74",
+  "ActionKeyword": "plugins",
+  "IsGlobal": false,
+  "Name": "Plugin Manager",
+  "Author": "BananaOnGitHub and contributors",
+  "Version": "0.3.0",
+  "Language": "csharp",
+  "Website": "https://github.com/BananaOnGitHub/PowerToysRun-PluginManager",
+  "ExecuteFileName": "Community.PowerToys.Run.Plugin.PluginManager.dll",
+  "IcoPathDark": "Images/plugin-manager.png",
+  "IcoPathLight": "Images/plugin-manager.png",
+  "DynamicLoading": false
+}

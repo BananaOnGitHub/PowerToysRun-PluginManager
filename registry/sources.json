@@ -1,0 +1,22 @@
+{
+  "sources": [
+    {
+      "id": "microsoft",
+      "name": "Microsoft PowerToys third-party plugin list",
+      "url": "https://raw.githubusercontent.com/microsoft/PowerToys/main/doc/thirdPartyRunPlugins.md",
+      "publicUrl": "https://github.com/microsoft/PowerToys/blob/main/doc/thirdPartyRunPlugins.md",
+      "kind": "microsoft",
+      "format": "table"
+    },
+    {
+      "id": "awesome",
+      "name": "Awesome PowerToys Run Plugins",
+      "url": "https://raw.githubusercontent.com/hlaueriksson/awesome-powertoys-run-plugins/main/readme.md",
+      "publicUrl": "https://github.com/hlaueriksson/awesome-powertoys-run-plugins",
+      "kind": "community",
+      "format": "list",
+      "startHeading": "## Plugins",
+      "endHeading": "## Resources"
+    }
+  ]
+}

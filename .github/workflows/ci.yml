@@ -1,0 +1,66 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 10.0.x
+      - name: Build core
+        run: dotnet build src/PowerToysRun.PluginManager.Core -c Release
+      - name: Build app
+        run: dotnet build src/PowerToysRun.PluginManager.App -c Release
+      - name: Build updater
+        run: dotnet build src/PowerToysRun.PluginManager.Updater -c Release
+      - name: Build installer bootstrapper
+        run: dotnet build src/PowerToysRun.PluginManager.Bootstrapper -c Release
+      - name: Build catalog generator
+        run: dotnet build tools/PowerToysRun.PluginManager.CatalogBuilder -c Release
+      - name: Build Run plugin (x64)
+        run: dotnet build src/PowerToysRun.PluginManager.RunPlugin -c Release -p:Platform=x64
+      - name: Build Run plugin (ARM64)
+        run: dotnet build src/PowerToysRun.PluginManager.RunPlugin -c Release -p:Platform=ARM64
+      - name: Test
+        run: dotnet test tests/PowerToysRun.PluginManager.Core.Tests -c Release
+      - name: Validate catalog generation
+        shell: pwsh
+        run: |
+          dotnet run --project tools/PowerToysRun.PluginManager.CatalogBuilder -c Release -- --skip-enrichment --output artifacts/catalog.json
+          $count = (Get-Content artifacts/catalog.json | ConvertFrom-Json).plugins.Count
+          if ($count -lt 50) { throw "Catalog unexpectedly contains only $count plugins." }
+      - name: Assemble x64 installer input
+        if: github.event_name == 'pull_request'
+        shell: pwsh
+        run: |
+          $inputRoot = "artifacts/installer-input"
+          dotnet publish src/PowerToysRun.PluginManager.App -c Release -r win-x64 --self-contained true -o "$inputRoot/App"
+          dotnet publish src/PowerToysRun.PluginManager.Updater -c Release -r win-x64 --self-contained true -o "$inputRoot/App"
+          dotnet publish src/PowerToysRun.PluginManager.Bootstrapper -c Release -r win-x64 --self-contained true -o "$inputRoot/App"
+          dotnet publish src/PowerToysRun.PluginManager.RunPlugin -c Release -r win-x64 --self-contained false -p:Platform=x64 -o "$inputRoot/Bootstrap"
+      - name: Build x64 setup executable
+        if: github.event_name == 'pull_request'
+        shell: pwsh
+        run: |
+          $compiler = (Get-Command ISCC.exe -ErrorAction SilentlyContinue).Source
+          if (-not $compiler) {
+            $compiler = @(
+              "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe",
+              "$env:ProgramFiles\Inno Setup 7\ISCC.exe"
+            ) | Where-Object { Test-Path $_ } | Select-Object -First 1
+          }
+          if (-not $compiler) { throw "Inno Setup compiler was not found on the runner." }
+          $version = (Select-String -Path Directory.Build.props -Pattern '<Version>([^<]+)</Version>').Matches[0].Groups[1].Value
+          & $compiler "/DMyVersion=$version" "/DMyArch=x64" "/DSourceRoot=$((Resolve-Path artifacts/installer-input).Path)" "/DOutputRoot=$((New-Item -ItemType Directory -Force artifacts/installer).FullName)" packaging/PowerToysRun.PluginManager.iss
+      - name: Upload x64 test installer
+        if: github.event_name == 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: PowerToysRun-PluginManager-Setup-win-x64-test
+          path: artifacts/installer/*.exe
+          retention-days: 14
