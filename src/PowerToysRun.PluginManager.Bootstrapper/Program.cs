@@ -173,7 +173,7 @@ internal static class BootstrapperProgram
         foreach (var sourcePath in Directory.EnumerateFileSystemEntries(
                      sourceDirectory,
                      "*",
-                     SearchOption.AllDirectories))
+                     System.IO.SearchOption.AllDirectories))
         {
             var attributes = File.GetAttributes(sourcePath);
             if ((attributes & FileAttributes.ReparsePoint) != 0)
