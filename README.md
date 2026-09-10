@@ -48,9 +48,9 @@ The updater does not force-kill PowerToys and does not request elevation by defa
 
 Download `PowerToysRun-PluginManager-Setup-win-x64.exe` or the ARM64 setup executable from the
 GitHub release and run it. Setup installs for the current user, creates a normal Apps & Features
-uninstall entry and Start menu shortcut, and does not require administrator rights. It stages the
-small PowerToys Run launcher and applies it through the same safe transaction path as every other
-plugin.
+uninstall entry, and does not require administrator rights. It deliberately creates no Start-menu
+or desktop shortcut: the manager is opened through PowerToys Run. Setup stages the small Run
+launcher and applies it through the same safe transaction path as every other plugin.
 
 After PowerToys restarts, open Run and type `plugins`.
 

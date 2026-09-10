@@ -25,8 +25,6 @@ AppPublisherURL={#MyAppUrl}
 AppSupportURL={#MyAppUrl}/issues
 AppUpdatesURL={#MyAppUrl}/releases
 DefaultDirName={localappdata}\PowerToysRunPluginManager\App
-DefaultGroupName={#MyAppName}
-DisableProgramGroupPage=yes
 LicenseFile={#SourcePath}\..\LICENSE
 OutputDir={#OutputRoot}
 OutputBaseFilename=PowerToysRun-PluginManager-Setup-win-{#MyArch}
@@ -52,19 +50,9 @@ ArchitecturesInstallIn64BitMode=x64compatible
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
 
-[Tasks]
-Name: "desktopicon"; Description: "Create a desktop shortcut"; GroupDescription: "Additional shortcuts:"; Flags: unchecked
-
 [Files]
 Source: "{#SourceRoot}\App\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "{#SourceRoot}\Bootstrap\*"; DestDir: "{app}\Bootstrap"; Flags: ignoreversion recursesubdirs createallsubdirs
-
-[Icons]
-Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
-Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
-
-[Run]
-Filename: "{app}\{#MyAppExeName}"; Description: "Open {#MyAppName}"; Flags: nowait postinstall skipifsilent
 
 [UninstallRun]
 Filename: "{app}\PowerToysRun.PluginManager.Bootstrapper.exe"; Parameters: "--uninstall"; Flags: runhidden waituntilterminated; RunOnceId: "RemoveBootstrapPlugin"
