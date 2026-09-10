@@ -63,6 +63,8 @@
                      BorderThickness="0" Background="Transparent"
                      HorizontalContentAlignment="Stretch"
                      ScrollViewer.CanContentScroll="False"
+                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                     ScrollViewer.VerticalScrollBarVisibility="Auto"
                      PreviewMouseWheel="PluginList_PreviewMouseWheel"
                      VirtualizingPanel.IsVirtualizing="True"
                      VirtualizingPanel.VirtualizationMode="Recycling">
