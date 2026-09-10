@@ -18,19 +18,28 @@ public static class PluginStateBuilder
             .GroupBy(plugin => NormalizeUrl(plugin.Manifest!.Website!), StringComparer.OrdinalIgnoreCase)
             .ToDictionary(group => group.Key, group => group.ToList(), StringComparer.OrdinalIgnoreCase);
 
+        var catalogEntriesByRepository = catalog.Plugins
+            .Where(entry => !string.IsNullOrWhiteSpace(entry.RepositoryUrl))
+            .GroupBy(entry => NormalizeUrl(entry.RepositoryUrl), StringComparer.OrdinalIgnoreCase)
+            .ToDictionary(group => group.Key, group => group.Count(), StringComparer.OrdinalIgnoreCase);
+
         var states = catalog.Plugins.Select(entry =>
         {
             byId.TryGetValue(entry.Id, out var installed);
             if (installed is null && !string.IsNullOrWhiteSpace(entry.RepositoryUrl))
             {
-                if (byWebsite.TryGetValue(NormalizeUrl(entry.RepositoryUrl), out var candidates))
+                var repository = NormalizeUrl(entry.RepositoryUrl);
+                if (byWebsite.TryGetValue(repository, out var candidates))
                 {
                     installed = candidates.FirstOrDefault(candidate =>
                         string.Equals(
                             NormalizeName(candidate.Manifest!.Name),
                             NormalizeName(entry.Name),
                             StringComparison.OrdinalIgnoreCase));
-                    installed ??= candidates.Count == 1 ? candidates[0] : null;
+                    installed ??= candidates.Count == 1 &&
+                        catalogEntriesByRepository[repository] == 1
+                            ? candidates[0]
+                            : null;
                 }
             }
 
