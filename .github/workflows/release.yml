@@ -44,7 +44,20 @@ jobs:
 
           should_release=true
           if [[ "${{ github.ref_type }}" != "tag" ]] && gh release view "$tag" >/dev/null 2>&1; then
+            asset_names=$(gh release view "$tag" --json assets --jq '.assets[].name')
+            expected_assets=(
+              "PowerToysRun-PluginManager-Setup-win-x64.exe"
+              "PowerToysRun-PluginManager-Setup-win-arm64.exe"
+              "PowerToysRun-PluginManager-win-x64.zip"
+              "PowerToysRun-PluginManager-win-arm64.zip"
+            )
             should_release=false
+            for asset in "${expected_assets[@]}"; do
+              if ! grep -Fxq "$asset" <<< "$asset_names"; then
+                should_release=true
+                break
+              fi
+            done
           fi
 
           echo "version=$version" >> "$GITHUB_OUTPUT"
@@ -141,7 +154,7 @@ jobs:
           TAG: ${{ needs.prepare.outputs.tag }}
           VERSION: ${{ needs.prepare.outputs.version }}
         run: |
-          mapfile -t assets < <(find artifacts/release -maxdepth 1 -type f | sort)
+          mapfile -t assets < <(find artifacts/release -type f | sort)
           if [[ ${#assets[@]} -eq 0 ]]; then
             echo "No release assets were downloaded." >&2
             exit 1
