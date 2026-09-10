@@ -22,7 +22,7 @@ workflow produces an enriched catalog artifact for review.
 
 ## Status
 
-The first release candidate includes the gallery, local plugin scanner, queued installs and
+The current release includes the gallery, local plugin scanner, queued installs and
 removals, transactional updater, PowerToys Run launcher, conventional per-user installer, and an
 in-app manager update notification. Community release layouts vary, so unsupported packages fail
 during staging without touching the live plugin directory.
@@ -56,6 +56,10 @@ After PowerToys restarts, open Run and type `plugins`.
 
 The extracted ZIP and `Install.ps1` remain available as a portable fallback.
 
+Setup can optionally move its own downloaded executable to the Recycle Bin or permanently delete
+it after installation. The option is unchecked by default, and the Recycle Bin is the default
+choice when it is enabled.
+
 ## Manager updates
 
 When the manager opens, it checks the latest stable GitHub release. A banner appears only when a
@@ -67,6 +71,16 @@ downloaded installer as coming from an unknown publisher. The installed applicat
 copied by Setup rather than launched from a downloaded archive, so this warning is not repeated on
 every manager launch. A trusted code-signing certificate can be added to the release pipeline
 later without changing the update design.
+
+## Versions and releases
+
+Versions follow semantic `major.minor.patch` numbering. `Directory.Build.props` is the source of
+truth for application binaries, while the Run plugin manifest mirrors that version. A version bump
+and matching changelog entry merged to `main` creates the corresponding `v` tag and GitHub Release;
+manually pushed matching tags are supported as well. Setup executables are attached directly to
+the release so they download as `.exe` files rather than Actions artifact ZIPs.
+
+See [CHANGELOG.md](CHANGELOG.md) for release notes.
 
 ## Build
 

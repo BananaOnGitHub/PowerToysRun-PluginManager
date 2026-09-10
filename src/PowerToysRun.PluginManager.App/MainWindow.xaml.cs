@@ -202,6 +202,7 @@ public partial class MainWindow : Window
                 startInfo.ArgumentList.Add("/CURRENTUSER");
                 startInfo.ArgumentList.Add("/CLOSEAPPLICATIONS");
                 startInfo.ArgumentList.Add("/NORESTARTAPPLICATIONS");
+                startInfo.ArgumentList.Add("/DELETEINSTALLER=permanent");
                 Process.Start(startInfo);
                 Close();
             });

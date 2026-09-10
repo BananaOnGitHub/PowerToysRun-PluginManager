@@ -58,6 +58,83 @@ Source: "{#SourceRoot}\Bootstrap\*"; DestDir: "{app}\Bootstrap"; Flags: ignoreve
 Filename: "{app}\PowerToysRun.PluginManager.Bootstrapper.exe"; Parameters: "--uninstall"; Flags: runhidden waituntilterminated; RunOnceId: "RemoveBootstrapPlugin"
 
 [Code]
+var
+  DeleteInstallerCheckBox: TNewCheckBox;
+  RecycleInstallerRadio: TNewRadioButton;
+  PermanentlyDeleteInstallerRadio: TNewRadioButton;
+
+procedure UpdateDeleteInstallerOptions(Sender: TObject);
+begin
+  RecycleInstallerRadio.Enabled := DeleteInstallerCheckBox.Checked;
+  PermanentlyDeleteInstallerRadio.Enabled := DeleteInstallerCheckBox.Checked;
+end;
+
+procedure InitializeWizard;
+begin
+  DeleteInstallerCheckBox := TNewCheckBox.Create(WizardForm);
+  DeleteInstallerCheckBox.Parent := WizardForm.FinishedPage;
+  DeleteInstallerCheckBox.Left := WizardForm.FinishedLabel.Left;
+  DeleteInstallerCheckBox.Top := WizardForm.FinishedLabel.Top +
+    WizardForm.FinishedLabel.Height + ScaleY(18);
+  DeleteInstallerCheckBox.Width := WizardForm.FinishedLabel.Width;
+  DeleteInstallerCheckBox.Height := ScaleY(18);
+  DeleteInstallerCheckBox.Caption := 'Delete this installer after Setup closes';
+  DeleteInstallerCheckBox.Checked := False;
+  DeleteInstallerCheckBox.Visible := not WizardSilent;
+  DeleteInstallerCheckBox.OnClick := @UpdateDeleteInstallerOptions;
+
+  RecycleInstallerRadio := TNewRadioButton.Create(WizardForm);
+  RecycleInstallerRadio.Parent := WizardForm.FinishedPage;
+  RecycleInstallerRadio.Left := DeleteInstallerCheckBox.Left + ScaleX(20);
+  RecycleInstallerRadio.Top := DeleteInstallerCheckBox.Top + ScaleY(23);
+  RecycleInstallerRadio.Width := DeleteInstallerCheckBox.Width - ScaleX(20);
+  RecycleInstallerRadio.Height := ScaleY(18);
+  RecycleInstallerRadio.Caption := 'Move it to the Recycle Bin';
+  RecycleInstallerRadio.Checked := True;
+  RecycleInstallerRadio.Enabled := False;
+  RecycleInstallerRadio.Visible := not WizardSilent;
+
+  PermanentlyDeleteInstallerRadio := TNewRadioButton.Create(WizardForm);
+  PermanentlyDeleteInstallerRadio.Parent := WizardForm.FinishedPage;
+  PermanentlyDeleteInstallerRadio.Left := RecycleInstallerRadio.Left;
+  PermanentlyDeleteInstallerRadio.Top := RecycleInstallerRadio.Top + ScaleY(22);
+  PermanentlyDeleteInstallerRadio.Width := RecycleInstallerRadio.Width;
+  PermanentlyDeleteInstallerRadio.Height := ScaleY(18);
+  PermanentlyDeleteInstallerRadio.Caption := 'Delete it permanently';
+  PermanentlyDeleteInstallerRadio.Enabled := False;
+  PermanentlyDeleteInstallerRadio.Visible := not WizardSilent;
+end;
+
+procedure ScheduleInstallerDeletion;
+var
+  DeleteMode: String;
+  ResultCode: Integer;
+begin
+  DeleteMode := Lowercase(ExpandConstant('{param:DELETEINSTALLER|}'));
+  if (not WizardSilent) and DeleteInstallerCheckBox.Checked then
+  begin
+    if PermanentlyDeleteInstallerRadio.Checked then
+      DeleteMode := 'permanent'
+    else
+      DeleteMode := 'recycle';
+  end;
+
+  if (DeleteMode <> 'recycle') and (DeleteMode <> 'permanent') then
+    Exit;
+
+  if not Exec(
+    ExpandConstant('{app}\PowerToysRun.PluginManager.Bootstrapper.exe'),
+    Format('--delete-installer "%s" %s', [ExpandConstant('{srcexe}'), DeleteMode]),
+    '', SW_HIDE, ewNoWait, ResultCode) then
+  begin
+    SuppressibleMsgBox(
+      'Setup could not schedule deletion of the installer: ' + SysErrorMessage(ResultCode),
+      mbError,
+      MB_OK,
+      IDOK);
+  end;
+end;
+
 procedure CurStepChanged(CurStep: TSetupStep);
 var
   ResultCode: Integer;
@@ -77,4 +154,7 @@ begin
         MB_OK);
     end;
   end;
+
+  if CurStep = ssDone then
+    ScheduleInstallerDeletion;
 end;

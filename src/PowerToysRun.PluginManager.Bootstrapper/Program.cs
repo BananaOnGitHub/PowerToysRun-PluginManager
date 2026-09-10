@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using Microsoft.VisualBasic.FileIO;
 using PowerToysRun.PluginManager.Core;
 using PowerToysRun.PluginManager.Core.Models;
 using PowerToysRun.PluginManager.Core.Services;
@@ -12,6 +13,11 @@ internal static class BootstrapperProgram
 
     public static async Task<int> RunAsync(string[] arguments)
     {
+        if (arguments.Length == 3 && arguments[0] == "--delete-installer")
+        {
+            return await DeleteInstallerAsync(arguments[1], arguments[2]);
+        }
+
         if (arguments.Length != 1 ||
             arguments[0] is not ("--install" or "--uninstall"))
         {
@@ -95,6 +101,70 @@ internal static class BootstrapperProgram
             Console.Error.WriteLine(exception.Message);
             return 3;
         }
+    }
+
+    private static async Task<int> DeleteInstallerAsync(string installerPath, string mode)
+    {
+        try
+        {
+            var fullPath = Path.GetFullPath(installerPath);
+            var fileName = Path.GetFileName(fullPath);
+            if (!fileName.StartsWith(
+                    "PowerToysRun-PluginManager-Setup-win-",
+                    StringComparison.OrdinalIgnoreCase) ||
+                !fileName.EndsWith(".exe", StringComparison.OrdinalIgnoreCase) ||
+                IsWithin(fullPath, AppContext.BaseDirectory) ||
+                mode is not ("recycle" or "permanent"))
+            {
+                throw new InvalidDataException("The requested installer cleanup is invalid.");
+            }
+
+            for (var attempt = 0; attempt < 60; attempt++)
+            {
+                if (!File.Exists(fullPath))
+                {
+                    return 0;
+                }
+
+                try
+                {
+                    if (mode == "recycle")
+                    {
+                        FileSystem.DeleteFile(
+                            fullPath,
+                            UIOption.OnlyErrorDialogs,
+                            RecycleOption.SendToRecycleBin);
+                    }
+                    else
+                    {
+                        File.Delete(fullPath);
+                    }
+
+                    return File.Exists(fullPath) ? 4 : 0;
+                }
+                catch (Exception exception) when (
+                    exception is IOException or UnauthorizedAccessException)
+                {
+                    await Task.Delay(500);
+                }
+            }
+
+            return 4;
+        }
+        catch (Exception exception)
+        {
+            Console.Error.WriteLine(exception.Message);
+            return 3;
+        }
+    }
+
+    private static bool IsWithin(string candidate, string directory)
+    {
+        var fullDirectory = Path.GetFullPath(directory)
+            .TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+        return candidate.StartsWith(
+            fullDirectory + Path.DirectorySeparatorChar,
+            StringComparison.OrdinalIgnoreCase);
     }
 
     private static void CopyDirectory(string sourceDirectory, string destinationDirectory)
