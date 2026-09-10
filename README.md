@@ -1,130 +1,203 @@
-# PowerToys Run Plugin Manager
+<div align="center">
+  <img src="https://raw.githubusercontent.com/BananaOnGitHub/PowerToysRun-PluginManager/main/src/PowerToysRun.PluginManager.App/Assets/plugin-manager.png" alt="PowerToys Run Plugin Manager logo" width="128" height="128">
 
-A standalone, accessible plugin gallery and transactional installer for
-[PowerToys Run](https://learn.microsoft.com/windows/powertoys/run).
+  <h1>PowerToys Run Plugin Manager</h1>
 
-The project is intentionally not a PowerToys fork. The full manager lives outside PowerToys,
-while a tiny Run plugin makes it easy to reach:
+  <p>Browse, install, update, and remove community plugins without leaving PowerToys Run.</p>
+
+  <p>
+    <a href="https://github.com/BananaOnGitHub/PowerToysRun-PluginManager/actions/workflows/ci.yml">
+      <img src="https://github.com/BananaOnGitHub/PowerToysRun-PluginManager/actions/workflows/ci.yml/badge.svg" alt="Build status">
+    </a>
+    <a href="https://github.com/BananaOnGitHub/PowerToysRun-PluginManager/releases/latest">
+      <img src="https://img.shields.io/github/v/release/BananaOnGitHub/PowerToysRun-PluginManager?label=latest" alt="Latest release">
+    </a>
+    <a href="https://github.com/BananaOnGitHub/PowerToysRun-PluginManager/releases">
+      <img src="https://img.shields.io/github/downloads/BananaOnGitHub/PowerToysRun-PluginManager/total" alt="Total downloads">
+    </a>
+    <a href="https://github.com/BananaOnGitHub/PowerToysRun-PluginManager/blob/main/LICENSE">
+      <img src="https://img.shields.io/badge/license-Apache%202.0-blue" alt="Apache 2.0 license">
+    </a>
+  </p>
+
+  <p>
+    <a href="https://github.com/BananaOnGitHub/PowerToysRun-PluginManager/releases/latest/download/PowerToysRun-PluginManager-Setup-win-x64.exe">
+      <img src="https://img.shields.io/badge/Download-x64-0078D4?style=for-the-badge&logo=windows&logoColor=white" alt="Download for x64">
+    </a>
+    <a href="https://github.com/BananaOnGitHub/PowerToysRun-PluginManager/releases/latest/download/PowerToysRun-PluginManager-Setup-win-arm64.exe">
+      <img src="https://img.shields.io/badge/Download-ARM64-0078D4?style=for-the-badge&logo=windows&logoColor=white" alt="Download for ARM64">
+    </a>
+  </p>
+</div>
+
+## ✨ What it does
+
+PowerToys Run Plugin Manager gives community plugins a proper home: descriptions, authors, icons,
+versions, repository links, and install status in one native Windows app.
+
+- **Discover plugins** from the two main community lists.
+- **Search the catalog** by name, author, or description.
+- **Install, update, reinstall, or remove** plugins without manually moving folders around.
+- **Queue multiple changes** and apply them with a single PowerToys restart.
+- **See locally installed plugins**, including ones that are not yet in the catalog.
+- **Get notified about manager updates** when a new stable release is available.
+- **Use it with a keyboard or screen reader** through native WPF controls and UI Automation names.
+
+The manager is a companion app, not a PowerToys fork. A tiny launcher plugin lives inside
+PowerToys Run; the full gallery and installer stay independent so they can keep working across
+PowerToys updates.
+
+## 🚀 Installation
+
+### Requirements
+
+- Windows 10 version 2004 or newer
+- [Microsoft PowerToys](https://github.com/microsoft/PowerToys/releases) with PowerToys Run enabled
+- An x64 or ARM64 PC
+
+### Quick install
+
+1. Download the setup executable for your PC:
+   - [Download x64 setup](https://github.com/BananaOnGitHub/PowerToysRun-PluginManager/releases/latest/download/PowerToysRun-PluginManager-Setup-win-x64.exe)
+   - [Download ARM64 setup](https://github.com/BananaOnGitHub/PowerToysRun-PluginManager/releases/latest/download/PowerToysRun-PluginManager-Setup-win-arm64.exe)
+2. Run Setup. Administrator rights are not required.
+    - Setup will automatically restart PowerToys.
+4. Open PowerToys Run with <kbd>Alt</kbd> + <kbd>Space</kbd> (or your configured shortcut) and type `plugins`.
+
+That's it 🎉
+
+Setup installs for the current user unless specified and adds a normal entry to **Settings → Apps → Installed
+apps**. It intentionally creates no Start menu or desktop shortcut—the manager is meant to be
+opened from PowerToys Run.
+
+Windows may show an unknown-publisher warning because releases are not Authenticode-signed yet. Click `More info` on the SmartScreen popup and `Run` to bypass this.
+The warning applies to the downloaded installer; it should not appear each time the installed
+manager opens.
+
+<details>
+<summary><b>Portable installation</b></summary>
+
+Portable ZIP packages are also available on the
+[Releases page](https://github.com/BananaOnGitHub/PowerToysRun-PluginManager/releases/latest).
+Extract the correct archive and run `Install.ps1`. The regular setup executable is recommended for
+most people because it supports clean upgrades and uninstalling through Windows Settings.
+
+</details>
+
+## 🔎 Usage
+
+Open PowerToys Run and type:
 
 ```text
 plugins
-plugins clipboard
 ```
 
-The catalog currently combines 70 entries from:
+Add search text to jump straight into a filtered catalog. For example:
 
-- [Microsoft's third-party Run plugin list](https://github.com/microsoft/PowerToys/blob/main/doc/thirdPartyRunPlugins.md)
+```text
+plugins clipboard
+```
+or
+```text
+plugins weather
+```
+
+Choose **Install**, **Update**, **Reinstall**, or **Remove** on as many plugins as you like. The
+changes wait in a queue while you continue browsing. When you choose **Apply changes**, the manager
+closes PowerToys once, applies the full queue, and starts it again.
+
+##  Plugin catalog
+
+The bundled catalog currently contains **70 plugins** collected from:
+
+- [Microsoft's third-party PowerToys Run plugin list](https://github.com/microsoft/PowerToys/blob/main/doc/thirdPartyRunPlugins.md)
 - [Awesome PowerToys Run Plugins](https://github.com/hlaueriksson/awesome-powertoys-run-plugins)
 
-The catalog includes descriptions, authors, source provenance, repository links, GitHub avatar
-artwork, release versions, and architecture metadata when available. A scheduled read-only
-workflow produces an enriched catalog artifact for review.
+The catalog stores descriptions, authors, source provenance, repository links, GitHub avatars,
+release versions, and architecture information when available. A scheduled read-only workflow
+builds an enriched catalog artifact for review.
 
-## Status
+Catalog inclusion helps people discover a plugin; it is not an endorsement. Community plugins run
+inside PowerToys under your user account, so check the linked repository before installing code you
+do not trust.
 
-The current release includes the gallery, local plugin scanner, queued installs and
-removals, transactional updater, PowerToys Run launcher, conventional per-user installer, and an
-in-app manager update notification. Community release layouts vary, so unsupported packages fail
-during staging without touching the live plugin directory.
+##  Safe installs and updates
 
-## Why it is split in two
+PowerToys can lock plugin DLLs while it is running. Running as administrator does not unlock a file
+that is actively in use, so the manager never edits the live plugin directory until PowerToys has
+closed.
 
-PowerToys can keep DLLs and plugin directories open while it is running. Administrator rights do
-not solve an active file lock. The manager therefore follows one rule: **never modify the live
-plugin directory while PowerToys is running.**
+1. Downloads are staged and checked before anything live changes.
+2. Installs, updates, and removals are collected into one queue.
+3. PowerToys is asked to close normally; it is not force-killed.
+4. The queue is applied as one transaction and replaced plugins are kept as backups.
+5. If one step fails, completed steps are rolled back before PowerToys restarts.
 
-1. The app downloads and validates each requested release into
-   `%LOCALAPPDATA%\\PowerToysRunPluginManager\\Staging`.
-2. Installs, updates, and removals collect in a queue while PowerToys keeps running.
-3. When the queue is applied, the updater asks PowerToys to close with the normal Windows `WM_CLOSE`
-   path and waits for both PowerToys and PowerLauncher to exit.
-4. It applies the entire queue in one transaction, retains replaced plugins as backups, and
-   restarts PowerToys once.
-5. A failed multi-step transaction rolls previously applied operations back.
+The manager does not request elevation by default. Staging data and transaction results are stored
+under `%LOCALAPPDATA%\PowerToysRunPluginManager`.
 
-The updater does not force-kill PowerToys and does not request elevation by default.
+##  Manager updates
 
-## Install a release
+The manager checks the latest stable GitHub release when it opens. If a newer version is available,
+a small banner offers the correct setup executable for the current architecture. Nothing is
+downloaded until you choose to update.
 
-Download `PowerToysRun-PluginManager-Setup-win-x64.exe` or the ARM64 setup executable from the
-GitHub release and run it. Setup installs for the current user, creates a normal Apps & Features
-uninstall entry, and does not require administrator rights. It deliberately creates no Start-menu
-or desktop shortcut: the manager is opened through PowerToys Run. Setup stages the small Run
-launcher and applies it through the same safe transaction path as every other plugin.
+Versions follow [Semantic Versioning](https://semver.org/). `Directory.Build.props` is the source
+of truth, and matching changes merged to `main` produce a `vX.Y.Z` tag and GitHub Release. See the
+[changelog](https://github.com/BananaOnGitHub/PowerToysRun-PluginManager/blob/main/CHANGELOG.md) for release notes.
 
-After PowerToys restarts, open Run and type `plugins`.
+##  Building from source
 
-The extracted ZIP and `Install.ps1` remain available as a portable fallback.
-
-Setup can optionally move its own downloaded executable to the Recycle Bin or permanently delete
-it after installation. The option is unchecked by default, and the Recycle Bin is the default
-choice when it is enabled.
-
-## Manager updates
-
-When the manager opens, it checks the latest stable GitHub release. A banner appears only when a
-newer architecture-matched setup executable exists. Updates are downloaded after the user clicks
-the banner action, then Setup starts and the manager exits so its files can be replaced.
-
-Release binaries are not currently Authenticode-signed. Windows may therefore identify the first
-downloaded installer as coming from an unknown publisher. The installed application itself is
-copied by Setup rather than launched from a downloaded archive, so this warning is not repeated on
-every manager launch. A trusted code-signing certificate can be added to the release pipeline
-later without changing the update design.
-
-## Versions and releases
-
-Versions follow semantic `major.minor.patch` numbering. `Directory.Build.props` is the source of
-truth for application binaries, while the Run plugin manifest mirrors that version. A version bump
-and matching changelog entry merged to `main` creates the corresponding `v` tag and GitHub Release;
-manually pushed matching tags are supported as well. Setup executables are attached directly to
-the release so they download as `.exe` files rather than Actions artifact ZIPs.
-
-See [CHANGELOG.md](CHANGELOG.md) for release notes.
-
-## Build
-
-Requirements:
-
-- .NET 10 SDK
-- Windows 10 2004 or newer for running the WPF app
+You will need the [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0).
 
 ```powershell
+git clone https://github.com/BananaOnGitHub/PowerToysRun-PluginManager.git
+cd PowerToysRun-PluginManager
+
 dotnet build PowerToysRun.PluginManager.slnx -c Release
 dotnet test tests/PowerToysRun.PluginManager.Core.Tests -c Release
+```
+
+To rebuild the bundled catalog without GitHub enrichment:
+
+```powershell
 dotnet run --project tools/PowerToysRun.PluginManager.CatalogBuilder -c Release -- --skip-enrichment
 ```
 
-The repository cross-targets Windows from other operating systems, but the GUI and updater only
+The repository can be built from another operating system, but the WPF manager and updater only
 run on Windows.
 
-## Project layout
+<details>
+<summary><b>Project structure</b></summary>
 
 | Path | Purpose |
 | --- | --- |
 | `src/PowerToysRun.PluginManager.App` | WPF gallery and staging UI |
 | `src/PowerToysRun.PluginManager.Core` | Catalog, scanning, validation, and transaction models |
 | `src/PowerToysRun.PluginManager.RunPlugin` | Small `plugins` launcher inside PowerToys Run |
-| `src/PowerToysRun.PluginManager.Bootstrapper` | Installer bridge for safely adding or removing the Run launcher |
+| `src/PowerToysRun.PluginManager.Bootstrapper` | Safe installer bridge for the Run launcher |
 | `src/PowerToysRun.PluginManager.Updater` | Restart-aware transaction executor and rollback |
 | `tools/PowerToysRun.PluginManager.CatalogBuilder` | Source merge and GitHub enrichment |
 | `registry/sources.json` | Reviewed catalog source configuration |
 | `catalog/catalog.json` | Bundled offline catalog |
 
-## Accessibility
+</details>
 
-The UI uses native WPF controls, follows the Windows light/dark theme, supports keyboard navigation,
-exposes control names to UI Automation, and does not encode installed/update state using color
-alone.
+##  Contributing
 
-## Trust model
+Bug reports, catalog fixes, accessibility feedback, and pull requests are welcome. If a plugin has
+an unusual release layout, please include a link to one of its release assets so the installer can
+be tested against the real package.
 
-Catalog inclusion is discovery, not an endorsement. Plugin code belongs to its publisher and runs
-inside PowerToys after installation. Downloads are validated structurally and hashed during
-staging, but a hash fetched alongside an unsigned release is not publisher verification. Future
-catalog policy can add reviewed checksums or signatures without weakening the current transaction
-boundary.
+Please run the build and tests before opening a pull request.
 
-## License
+##  License
 
-Apache License 2.0. See [LICENSE](LICENSE).
+PowerToys Run Plugin Manager is available under the
+[Apache License 2.0](https://github.com/BananaOnGitHub/PowerToysRun-PluginManager/blob/main/LICENSE).
+
+---
+
+<div align="center">
+  Built for people who still prefer PowerToys Run <img src="https://cdn.7tv.app/emote/01G1M77D4R0004YN3NKDRR9YKJ/1x.webp" alt=":ok:" width="20">
+</div>
