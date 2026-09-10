@@ -271,10 +271,10 @@ internal static class NativeMethods
         EnumWindows(
             (windowHandle, _) =>
             {
-                _ = GetWindowThreadProcessId(windowHandle, out var ownerProcessId);
+                GetWindowThreadProcessId(windowHandle, out var ownerProcessId);
                 if (ownerProcessId == processId)
                 {
-                    _ = PostMessage(windowHandle, WmClose, IntPtr.Zero, IntPtr.Zero);
+                    PostMessage(windowHandle, WmClose, IntPtr.Zero, IntPtr.Zero);
                 }
 
                 return true;
