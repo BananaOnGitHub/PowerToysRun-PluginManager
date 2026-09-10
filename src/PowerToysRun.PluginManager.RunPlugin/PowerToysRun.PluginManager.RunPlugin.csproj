@@ -10,7 +10,7 @@
     <PlatformTarget Condition="'$(PlatformTarget)' == ''">x64</PlatformTarget>
     <AssemblyName>Community.PowerToys.Run.Plugin.PluginManager</AssemblyName>
     <RootNamespace>Community.PowerToys.Run.Plugin.PluginManager</RootNamespace>
-    <Version>0.1.0</Version>
+    <Version>0.1.1</Version>
   </PropertyGroup>
 
   <ItemGroup>

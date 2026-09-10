@@ -6,6 +6,8 @@ namespace Community.PowerToys.Run.Plugin.PluginManager;
 
 public sealed class Main : IPlugin
 {
+    public static string PluginID => "9A68C4D267E24E88A20DF0E199C50E74";
+
     public string Name => "Plugin Manager";
 
     public string Description => "Browse, install, update, and remove PowerToys Run plugins.";
