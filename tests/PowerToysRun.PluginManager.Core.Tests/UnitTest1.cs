@@ -93,9 +93,10 @@ public sealed class CoreTests
         var operation = Assert.Single(plan.Operations);
         Assert.Equal(PluginTransactionKind.Uninstall, operation.Kind);
         Assert.Equal("PowerToys.exe", plan.PowerToysExecutablePath);
-        Assert.True(operation.BackupDirectory.StartsWith(
+        Assert.StartsWith(
             paths.BackupDirectory,
-            StringComparison.OrdinalIgnoreCase));
+            operation.BackupDirectory,
+            StringComparison.OrdinalIgnoreCase);
     }
 
     [Fact]
