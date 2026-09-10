@@ -14,11 +14,13 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <AssemblyName>PowerToysRun.PluginManager</AssemblyName>
     <RootNamespace>PowerToysRun.PluginManager.App</RootNamespace>
-    <Version>0.1.0</Version>
+    <Version>0.2.0</Version>
+    <ApplicationIcon>Assets\plugin-manager.ico</ApplicationIcon>
     <NoWarn>$(NoWarn);WPF0001</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
+    <Resource Include="Assets\plugin-manager.png" />
     <Content Include="..\..\catalog\catalog.json" Link="catalog\catalog.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

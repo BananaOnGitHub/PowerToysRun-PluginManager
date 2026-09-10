@@ -3,6 +3,8 @@ using System.IO;
 using System.Net.Http;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
+using System.Windows.Media;
 using PowerToysRun.PluginManager.App.ViewModels;
 using PowerToysRun.PluginManager.Core;
 using PowerToysRun.PluginManager.Core.Models;
@@ -15,6 +17,7 @@ public partial class MainWindow : Window
     private readonly AppPaths _paths = new();
     private readonly HttpClient _httpClient = new();
     private readonly MainViewModel _viewModel;
+    private ScrollViewer? _pluginScrollViewer;
 
     public MainWindow()
     {
@@ -42,6 +45,45 @@ public partial class MainWindow : Window
         {
             _viewModel.SetView(view);
         }
+    }
+
+    private void PluginList_PreviewMouseWheel(object sender, MouseWheelEventArgs eventArgs)
+    {
+        _pluginScrollViewer ??= FindVisualChild<ScrollViewer>(PluginList);
+        if (_pluginScrollViewer is null || eventArgs.Delta == 0)
+        {
+            return;
+        }
+
+        const double pixelsPerNotch = 52;
+        var notches = eventArgs.Delta / 120d;
+        var targetOffset = Math.Clamp(
+            _pluginScrollViewer.VerticalOffset - (notches * pixelsPerNotch),
+            0,
+            _pluginScrollViewer.ScrollableHeight);
+        _pluginScrollViewer.ScrollToVerticalOffset(targetOffset);
+        eventArgs.Handled = true;
+    }
+
+    private static T? FindVisualChild<T>(DependencyObject parent)
+        where T : DependencyObject
+    {
+        for (var index = 0; index < VisualTreeHelper.GetChildrenCount(parent); index++)
+        {
+            var child = VisualTreeHelper.GetChild(parent, index);
+            if (child is T match)
+            {
+                return match;
+            }
+
+            var nested = FindVisualChild<T>(child);
+            if (nested is not null)
+            {
+                return nested;
+            }
+        }
+
+        return null;
     }
 
     private async void PrimaryAction_Click(object sender, RoutedEventArgs eventArgs)

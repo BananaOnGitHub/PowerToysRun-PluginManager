@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:PowerToysRun.PluginManager.App"
         mc:Ignorable="d"
         Title="PowerToys Run Plugin Manager"
+        Icon="Assets/plugin-manager.png"
         Width="1060"
         Height="720"
         MinWidth="760"
@@ -20,8 +21,13 @@
 
         <Border Padding="18,24" BorderThickness="0,0,1,0"
                 BorderBrush="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}">
-            <DockPanel>
-                <StackPanel>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <StackPanel Grid.Row="0">
                     <TextBlock FontSize="21" FontWeight="SemiBold" Text="Plugin Manager" />
                     <TextBlock Margin="0,4,0,24" Opacity="0.68" Text="for PowerToys Run" />
                     <RadioButton x:Name="DiscoverNavigation" Padding="10" GroupName="Nav"
@@ -34,10 +40,10 @@
                                  Tag="Updates" Content="Updates"
                                  Checked="Navigation_Checked" />
                 </StackPanel>
-                <TextBlock DockPanel.Dock="Bottom" FontSize="12" Opacity="0.60"
+                <TextBlock Grid.Row="2" FontSize="12" Opacity="0.60"
                            TextWrapping="Wrap"
                            Text="Changes are staged first. PowerToys only closes when you approve applying them." />
-            </DockPanel>
+            </Grid>
         </Border>
 
         <Grid Grid.Column="1" Margin="28,22,28,16">
@@ -53,9 +59,11 @@
                      ToolTip="Search by plugin name, author, or description"
                      Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" />
 
-            <ListBox Grid.Row="2" ItemsSource="{Binding VisiblePlugins}"
+            <ListBox x:Name="PluginList" Grid.Row="2" ItemsSource="{Binding VisiblePlugins}"
                      BorderThickness="0" Background="Transparent"
                      HorizontalContentAlignment="Stretch"
+                     ScrollViewer.CanContentScroll="False"
+                     PreviewMouseWheel="PluginList_PreviewMouseWheel"
                      VirtualizingPanel.IsVirtualizing="True"
                      VirtualizingPanel.VirtualizationMode="Recycling">
                 <ListBox.ItemContainerStyle>
@@ -67,7 +75,7 @@
                 </ListBox.ItemContainerStyle>
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <Border Padding="16" BorderThickness="1" CornerRadius="8"
+                        <Border Padding="16" BorderThickness="1" CornerRadius="12"
                                 BorderBrush="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}">
                             <Grid>
                                 <Grid.ColumnDefinitions>
@@ -88,7 +96,8 @@
                                                FontWeight="SemiBold" Text="{Binding StatusLabel}" />
                                 </StackPanel>
                                 <StackPanel Grid.Column="2">
-                                    <Button MinWidth="92" Content="{Binding PrimaryActionLabel}"
+                                    <Button MinWidth="104" Style="{StaticResource PrimaryButtonStyle}"
+                                            Content="{Binding PrimaryActionLabel}"
                                             Tag="{Binding}" IsEnabled="{Binding CanInstall}"
                                             Click="PrimaryAction_Click" />
                                     <Button Margin="0,7,0,0" Content="Repository"

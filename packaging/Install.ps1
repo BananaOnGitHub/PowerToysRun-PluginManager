@@ -44,8 +44,11 @@ $plan = @{
 $planPath = Join-Path $transactionRoot "$transactionName.json"
 $plan | ConvertTo-Json -Depth 6 | Set-Content -Path $planPath -Encoding UTF8
 $updater = Join-Path $appTarget "PowerToysRun.PluginManager.Updater.exe"
-$process = Start-Process -FilePath $updater -ArgumentList @("`"$planPath`"") -Wait -PassThru
-if ($process.ExitCode -ne 0) {
+$process = Start-Process -FilePath $updater -ArgumentList @("`"$planPath`"") -PassThru
+$process.WaitForExit()
+$exitCode = $process.ExitCode
+$process.Dispose()
+if ($exitCode -ne 0) {
     $resultPath = "$planPath.result.json"
     $detail = if (Test-Path $resultPath) {
         (Get-Content $resultPath -Raw | ConvertFrom-Json).error
@@ -53,7 +56,7 @@ if ($process.ExitCode -ne 0) {
         "The updater rejected the transaction before producing a result file."
     }
 
-    throw "The plugin transaction failed with exit code $($process.ExitCode): $detail"
+    throw "The plugin transaction failed with exit code ${exitCode}: $detail"
 }
 
 Write-Host "Installed PowerToys Run Plugin Manager."
