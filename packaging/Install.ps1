@@ -44,7 +44,7 @@ $plan = @{
 $planPath = Join-Path $transactionRoot "$transactionName.json"
 $plan | ConvertTo-Json -Depth 6 | Set-Content -Path $planPath -Encoding UTF8
 $updater = Join-Path $appTarget "PowerToysRun.PluginManager.Updater.exe"
-$process = Start-Process -FilePath $updater -ArgumentList @($planPath) -Wait -PassThru
+$process = Start-Process -FilePath $updater -ArgumentList @("`"$planPath`"") -Wait -PassThru
 if ($process.ExitCode -ne 0) {
     throw "The plugin transaction failed with exit code $($process.ExitCode). Check $planPath.result.json."
 }
