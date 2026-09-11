@@ -165,6 +165,153 @@ public sealed class CoreTests
         Assert.False(states.Single(state => state.CatalogEntry.Name == "One").IsInstalled);
         Assert.True(states.Single(state => state.CatalogEntry.Name == "Two").IsInstalled);
     }
+
+    [Fact]
+    public void ReadmeParser_FindsPluginLogoScreenshotsAndOverview()
+    {
+        const string readme = """
+            # Example plugin
+
+            <img src="assets/example.logo.png" alt="Example logo">
+            <img src="https://img.shields.io/badge/build-passing-green" alt="Build">
+
+            ## Overview
+
+            **Example** keeps useful tools close without leaving your keyboard.
+
+            - Metadata that should not become prose.
+
+            ## Demo
+
+            ![Example in action](assets/demo-main.png)
+            ![Second screenshot](https://github.com/owner/repo/blob/main/assets/screenshot-two.jpg)
+            """;
+
+        var metadata = RepositoryReadmeParser.Parse(
+            readme,
+            new GitHubRepository("owner", "repo"),
+            "Example");
+
+        Assert.Equal(
+            "https://raw.githubusercontent.com/owner/repo/HEAD/assets/example.logo.png",
+            metadata.IconUrl);
+        Assert.Equal(
+            "Example keeps useful tools close without leaving your keyboard.",
+            metadata.LongDescription);
+        Assert.Equal(2, metadata.ScreenshotUrls.Count);
+        Assert.Contains(
+            "https://raw.githubusercontent.com/owner/repo/HEAD/assets/demo-main.png",
+            metadata.ScreenshotUrls);
+        Assert.Contains(
+            "https://raw.githubusercontent.com/owner/repo/main/assets/screenshot-two.jpg",
+            metadata.ScreenshotUrls);
+    }
+
+    [Fact]
+    public void ReadmeParser_IgnoresBadgesAndUnsafeOrUnsupportedImages()
+    {
+        const string readme = """
+            # Example plugin
+
+            ![Status](https://img.shields.io/badge/build-passing-green.png)
+            ![Vector](assets/icon.svg)
+            ![Embedded](data:image/png;base64,AAAA)
+            ![Traversal](../secret.png)
+            """;
+
+        var metadata = RepositoryReadmeParser.Parse(
+            readme,
+            new GitHubRepository("owner", "repo"),
+            "Example");
+
+        Assert.Null(metadata.IconUrl);
+        Assert.Empty(metadata.ScreenshotUrls);
+    }
+
+    [Theory]
+    [InlineData("https://raw.githubusercontent.com/owner/repo/main/icon.png", true)]
+    [InlineData("https://user-images.githubusercontent.com/123/demo.gif", true)]
+    [InlineData("http://raw.githubusercontent.com/owner/repo/main/icon.png", false)]
+    [InlineData("https://example.com/icon.png", false)]
+    [InlineData("file:///C:/Windows/System32/icon.png", false)]
+    [InlineData("https://raw.githubusercontent.com/owner/repo/main/icon.svg", false)]
+    public void CatalogMediaUrlPolicy_AllowsOnlyTrustedRasterImages(string url, bool expected)
+    {
+        Assert.Equal(expected, CatalogMediaUrlPolicy.IsAllowed(url));
+    }
+
+    [Theory]
+    [InlineData("Images/icon.png", true)]
+    [InlineData("Images\\icon.png", true)]
+    [InlineData("../icon.png", false)]
+    [InlineData("Images\\..\\icon.png", false)]
+    [InlineData("C:\\plugin\\icon.png", false)]
+    [InlineData("\\\\server\\share\\icon.png", false)]
+    public void InstalledPluginPathPolicy_RejectsRootedAndTraversingPaths(string path, bool expected)
+    {
+        Assert.Equal(expected, InstalledPluginScanner.IsSafeRelativePath(path));
+    }
+
+    [Fact]
+    public void ReadmeParser_PrefersPowerToysRunMediaInMultiProjectRepository()
+    {
+        const string readme = """
+            # Example
+
+            ![All features](Example-all.png)
+            ![MCP demo](Example.McpServer-demo.png)
+            ![CLI](Example.DotnetTool.gif)
+            ![PowerToys Run](Example.PowerToysRun.gif)
+            """;
+
+        var metadata = RepositoryReadmeParser.Parse(
+            readme,
+            new GitHubRepository("owner", "repo"),
+            "Example");
+
+        Assert.Null(metadata.IconUrl);
+        Assert.Equal(
+            ["https://raw.githubusercontent.com/owner/repo/HEAD/Example.PowerToysRun.gif"],
+            metadata.ScreenshotUrls);
+    }
+
+    [Fact]
+    public void TreeMediaSelector_FindsManifestStyleIconAndScreenshots()
+    {
+        var metadata = RepositoryTreeMediaSelector.Select(
+            [
+                "src/Images/process-killer.dark.png",
+                "src/Images/process-killer.light.png",
+                "assets/screenshots/demo-main.png",
+                "assets/screenshots/settings.png",
+            ],
+            new GitHubRepository("owner", "PowerToysRun-ProcessKiller"),
+            "Process Killer");
+
+        Assert.Equal(
+            "https://raw.githubusercontent.com/owner/PowerToysRun-ProcessKiller/HEAD/src/Images/process-killer.dark.png",
+            metadata.IconUrl);
+        Assert.Equal(
+            ["https://raw.githubusercontent.com/owner/PowerToysRun-ProcessKiller/HEAD/assets/screenshots/demo-main.png"],
+            metadata.ScreenshotUrls);
+    }
+
+    [Fact]
+    public void TreeMediaSelector_PrefersPowerToysRunIconOverSiblingApps()
+    {
+        var metadata = RepositoryTreeMediaSelector.Select(
+            [
+                "src/Example.CmdPal/Assets/icon.png",
+                "src/Example.PowerToysRun/Images/example.dark.png",
+                "Standalone App/Assets/StoreLogo.png",
+            ],
+            new GitHubRepository("owner", "Example"),
+            "Example");
+
+        Assert.Equal(
+            "https://raw.githubusercontent.com/owner/Example/HEAD/src/Example.PowerToysRun/Images/example.dark.png",
+            metadata.IconUrl);
+    }
 }
 
 internal sealed class TemporaryDirectory : IDisposable

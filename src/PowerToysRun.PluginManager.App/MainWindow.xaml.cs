@@ -88,6 +88,53 @@ public partial class MainWindow : Window
         return null;
     }
 
+    private static T? FindVisualParent<T>(DependencyObject child)
+        where T : DependencyObject
+    {
+        for (var parent = VisualTreeHelper.GetParent(child); parent is not null; parent = VisualTreeHelper.GetParent(parent))
+        {
+            if (parent is T match)
+            {
+                return match;
+            }
+        }
+
+        return null;
+    }
+
+    private void RemoteImage_ImageFailed(object sender, ExceptionRoutedEventArgs eventArgs)
+    {
+        if (sender is not Image image)
+        {
+            return;
+        }
+
+        var screenshotButton = FindVisualParent<Button>(image);
+        if (screenshotButton?.Tag is string)
+        {
+            screenshotButton.Visibility = Visibility.Collapsed;
+        }
+        else
+        {
+            image.Visibility = Visibility.Collapsed;
+        }
+    }
+
+    private void OpenDetails_Click(object sender, RoutedEventArgs eventArgs)
+    {
+        if (sender is Button { Tag: PluginCardViewModel plugin })
+        {
+            _viewModel.ShowDetails(plugin);
+            DetailView.ScrollToTop();
+        }
+    }
+
+    private void BackToCatalog_Click(object sender, RoutedEventArgs eventArgs)
+    {
+        _viewModel.CloseDetails();
+        SearchBox.Focus();
+    }
+
     private async void PrimaryAction_Click(object sender, RoutedEventArgs eventArgs)
     {
         if (_viewModel.IsBusy || sender is not Button { Tag: PluginCardViewModel plugin })
@@ -118,6 +165,14 @@ public partial class MainWindow : Window
     }
 
     private void Repository_Click(object sender, RoutedEventArgs eventArgs)
+    {
+        if (sender is Button { Tag: string url } && Uri.TryCreate(url, UriKind.Absolute, out _))
+        {
+            Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
+        }
+    }
+
+    private void Screenshot_Click(object sender, RoutedEventArgs eventArgs)
     {
         if (sender is Button { Tag: string url } && Uri.TryCreate(url, UriKind.Absolute, out _))
         {

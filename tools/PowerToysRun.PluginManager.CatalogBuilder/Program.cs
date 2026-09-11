@@ -1,8 +1,10 @@
+using System.Collections.Concurrent;
 using System.Net.Http.Headers;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using PowerToysRun.PluginManager.Core.Models;
 using PowerToysRun.PluginManager.Core.Serialization;
+using PowerToysRun.PluginManager.Core.Services;
 
 var options = BuilderOptions.Parse(args);
 var configuration = await SourceConfiguration.LoadAsync(options.SourcesPath);
@@ -19,6 +21,23 @@ var collected = new List<RawCatalogEntry>();
 foreach (var source in configuration.Sources)
 {
     Console.WriteLine($"Reading {source.Name}...");
+    if (source.Format == "manual")
+    {
+        collected.AddRange(source.Entries.Select(entry => new RawCatalogEntry(
+            entry.Name,
+            entry.Description,
+            entry.Author,
+            entry.RepositoryUrl,
+            source.Id,
+            entry.Tags)));
+        continue;
+    }
+
+    if (string.IsNullOrWhiteSpace(source.Url))
+    {
+        throw new InvalidDataException($"Source '{source.Id}' does not define a URL.");
+    }
+
     var markdown = await httpClient.GetStringAsync(source.Url);
     collected.AddRange(source.Format switch
     {
@@ -31,7 +50,7 @@ foreach (var source in configuration.Sources)
 var plugins = CatalogMerger.Merge(collected);
 if (!options.SkipEnrichment)
 {
-    await GitHubEnricher.EnrichAsync(httpClient, plugins);
+    await GitHubEnricher.EnrichAsync(httpClient, plugins, options.SkipReleaseEnrichment);
 }
 
 var catalog = new CatalogDocument
@@ -53,13 +72,18 @@ await File.WriteAllTextAsync(
     JsonSerializer.Serialize(catalog, JsonDefaults.Options) + Environment.NewLine);
 Console.WriteLine($"Wrote {catalog.Plugins.Count} plugins to {options.OutputPath}.");
 
-internal sealed record BuilderOptions(string SourcesPath, string OutputPath, bool SkipEnrichment)
+internal sealed record BuilderOptions(
+    string SourcesPath,
+    string OutputPath,
+    bool SkipEnrichment,
+    bool SkipReleaseEnrichment)
 {
     public static BuilderOptions Parse(string[] arguments)
     {
         var sources = "registry/sources.json";
         var output = "catalog/catalog.json";
         var skipEnrichment = false;
+        var skipReleaseEnrichment = false;
         for (var index = 0; index < arguments.Length; index++)
         {
             switch (arguments[index])
@@ -73,12 +97,15 @@ internal sealed record BuilderOptions(string SourcesPath, string OutputPath, boo
                 case "--skip-enrichment":
                     skipEnrichment = true;
                     break;
+                case "--skip-release-enrichment":
+                    skipReleaseEnrichment = true;
+                    break;
                 default:
                     throw new ArgumentException($"Unknown or incomplete argument '{arguments[index]}'.");
             }
         }
 
-        return new BuilderOptions(sources, output, skipEnrichment);
+        return new BuilderOptions(sources, output, skipEnrichment, skipReleaseEnrichment);
     }
 }
 
@@ -98,12 +125,22 @@ internal sealed class SourceDefinition
 {
     public string Id { get; init; } = string.Empty;
     public string Name { get; init; } = string.Empty;
-    public string Url { get; init; } = string.Empty;
+    public string? Url { get; init; }
     public string PublicUrl { get; init; } = string.Empty;
     public CatalogSourceKind Kind { get; init; }
     public string Format { get; init; } = string.Empty;
     public string? StartHeading { get; init; }
     public string? EndHeading { get; init; }
+    public List<ManualSourceEntry> Entries { get; init; } = [];
+}
+
+internal sealed class ManualSourceEntry
+{
+    public string Name { get; init; } = string.Empty;
+    public string Description { get; init; } = string.Empty;
+    public string Author { get; init; } = string.Empty;
+    public string RepositoryUrl { get; init; } = string.Empty;
+    public List<string> Tags { get; init; } = [];
 }
 
 internal sealed record RawCatalogEntry(
@@ -111,7 +148,8 @@ internal sealed record RawCatalogEntry(
     string Description,
     string Author,
     string RepositoryUrl,
-    string SourceId);
+    string SourceId,
+    IReadOnlyList<string> Tags);
 
 internal static partial class MarkdownCatalogParser
 {
@@ -147,7 +185,8 @@ internal static partial class MarkdownCatalogParser
                 PlainText(cells[2]),
                 PlainText(cells[1]) is { Length: > 0 } author ? author : repository.Owner,
                 CanonicalRepositoryUrl(repository),
-                source.Id));
+                source.Id,
+                []));
         }
 
         return entries;
@@ -179,7 +218,8 @@ internal static partial class MarkdownCatalogParser
                 PlainText(remainder.TrimStart(' ', '-', '–', '—', ':')),
                 repository.Owner,
                 CanonicalRepositoryUrl(repository),
-                source.Id));
+                source.Id,
+                []));
         }
 
         return entries;
@@ -255,6 +295,10 @@ internal static class CatalogMerger
                     .Distinct(StringComparer.OrdinalIgnoreCase)
                     .Order(StringComparer.OrdinalIgnoreCase)
                     .ToList(),
+                Tags = group.SelectMany(entry => entry.Tags)
+                    .Distinct(StringComparer.OrdinalIgnoreCase)
+                    .Order(StringComparer.OrdinalIgnoreCase)
+                    .ToList(),
             };
         })
         .ToList();
@@ -265,7 +309,17 @@ internal static class CatalogMerger
 
 internal static class GitHubEnricher
 {
-    public static async Task EnrichAsync(HttpClient httpClient, IReadOnlyList<PluginCatalogEntry> plugins)
+    private static readonly ConcurrentDictionary<string, Task<string?>> ReadmeCache =
+        new(StringComparer.OrdinalIgnoreCase);
+    private static readonly ConcurrentDictionary<string, Task<IReadOnlyList<string>>> TreeCache =
+        new(StringComparer.OrdinalIgnoreCase);
+    private static readonly ConcurrentDictionary<string, Task<IReadOnlyList<RepositoryPluginManifest>>> ManifestCache =
+        new(StringComparer.OrdinalIgnoreCase);
+
+    public static async Task EnrichAsync(
+        HttpClient httpClient,
+        IReadOnlyList<PluginCatalogEntry> plugins,
+        bool skipReleaseEnrichment)
     {
         using var gate = new SemaphoreSlim(4);
         await Task.WhenAll(plugins.Select(async plugin =>
@@ -273,12 +327,7 @@ internal static class GitHubEnricher
             await gate.WaitAsync();
             try
             {
-                await EnrichOneAsync(httpClient, plugin);
-            }
-            catch (Exception exception) when (
-                exception is HttpRequestException or JsonException or TaskCanceledException)
-            {
-                Console.Error.WriteLine($"Warning: could not enrich {plugin.RepositorySlug}: {exception.Message}");
+                await EnrichOneAsync(httpClient, plugin, skipReleaseEnrichment);
             }
             finally
             {
@@ -287,35 +336,280 @@ internal static class GitHubEnricher
         }));
     }
 
-    private static async Task EnrichOneAsync(HttpClient httpClient, PluginCatalogEntry plugin)
+    private static async Task EnrichOneAsync(
+        HttpClient httpClient,
+        PluginCatalogEntry plugin,
+        bool skipReleaseEnrichment)
+    {
+        await EnrichReadmeAsync(httpClient, plugin);
+        if (!skipReleaseEnrichment)
+        {
+            await EnrichReleaseAsync(httpClient, plugin);
+        }
+    }
+
+    private static async Task EnrichReadmeAsync(HttpClient httpClient, PluginCatalogEntry plugin)
+    {
+        try
+        {
+            if (!GitHubRepository.TryParse(plugin.RepositoryUrl, out var repository))
+            {
+                return;
+            }
+
+            var markdown = await ReadmeCache.GetOrAdd(
+                repository.Slug,
+                _ => FetchReadmeAsync(httpClient, repository));
+            if (markdown is null)
+            {
+                return;
+            }
+
+            var media = RepositoryReadmeParser.Parse(
+                markdown,
+                repository,
+                plugin.Name);
+            var treeMedia = new RepositoryReadmeMetadata();
+            string? manifestIconUrl = null;
+            if (media.IconUrl is null || media.ScreenshotUrls.Count == 0)
+            {
+                var paths = await TreeCache.GetOrAdd(
+                    repository.Slug,
+                    _ => FetchTreePathsAsync(httpClient, repository));
+                if (media.IconUrl is null)
+                {
+                    var manifests = await ManifestCache.GetOrAdd(
+                        repository.Slug,
+                        _ => FetchPluginManifestsAsync(httpClient, repository, paths));
+                    manifestIconUrl = SelectManifestIcon(repository, paths, manifests, plugin.Name);
+                }
+
+                treeMedia = RepositoryTreeMediaSelector.Select(paths, repository, plugin.Name);
+            }
+
+            plugin.IconUrl = media.IconUrl ?? manifestIconUrl ?? treeMedia.IconUrl ?? plugin.IconUrl;
+            plugin.LongDescription = media.LongDescription;
+            plugin.ScreenshotUrls = (media.ScreenshotUrls.Count > 0
+                    ? media.ScreenshotUrls
+                    : treeMedia.ScreenshotUrls)
+                .ToList();
+        }
+        catch (Exception exception) when (
+            exception is HttpRequestException or JsonException or TaskCanceledException)
+        {
+            Console.Error.WriteLine(
+                $"Warning: could not read media for {plugin.RepositorySlug}: {exception.Message}");
+        }
+    }
+
+    private static async Task<string?> FetchReadmeAsync(
+        HttpClient httpClient,
+        GitHubRepository repository)
     {
         using var response = await httpClient.GetAsync(
-            $"https://api.github.com/repos/{plugin.RepositorySlug}/releases/latest");
+            $"https://raw.githubusercontent.com/{repository.Slug}/HEAD/README.md");
+        return response.IsSuccessStatusCode
+            ? await response.Content.ReadAsStringAsync()
+            : null;
+    }
+
+    private static async Task<IReadOnlyList<string>> FetchTreePathsAsync(
+        HttpClient httpClient,
+        GitHubRepository repository)
+    {
+        using var response = await httpClient.GetAsync(
+            $"https://api.github.com/repos/{repository.Slug}/git/trees/HEAD?recursive=1");
         if (!response.IsSuccessStatusCode)
         {
-            return;
+            return [];
         }
 
         await using var stream = await response.Content.ReadAsStreamAsync();
-        var release = await JsonSerializer.DeserializeAsync<GitHubRelease>(stream, JsonDefaults.Options);
-        if (release is null)
+        var tree = await JsonSerializer.DeserializeAsync<GitHubTreeResponse>(stream, JsonDefaults.Options);
+        return tree?.Tree
+            .Where(item => string.Equals(item.Type, "blob", StringComparison.OrdinalIgnoreCase))
+            .Select(item => item.Path)
+            .Where(path => path.Length > 0)
+            .ToList() ?? [];
+    }
+
+    private static async Task<IReadOnlyList<RepositoryPluginManifest>> FetchPluginManifestsAsync(
+        HttpClient httpClient,
+        GitHubRepository repository,
+        IReadOnlyList<string> treePaths)
+    {
+        var results = new List<RepositoryPluginManifest>();
+        var manifestPaths = treePaths
+            .Where(path => path.EndsWith("plugin.json", StringComparison.OrdinalIgnoreCase))
+            .OrderByDescending(path => NormalizeName(path).Contains("powertoysrun", StringComparison.Ordinal))
+            .ThenBy(path => path.Length)
+            .Take(24);
+        foreach (var path in manifestPaths)
         {
-            return;
+            try
+            {
+                using var response = await httpClient.GetAsync(RawUrl(repository, path));
+                if (!response.IsSuccessStatusCode)
+                {
+                    continue;
+                }
+
+                await using var stream = await response.Content.ReadAsStreamAsync();
+                var manifest = await JsonSerializer.DeserializeAsync<PluginManifest>(stream, JsonDefaults.Options);
+                if (manifest is not null)
+                {
+                    results.Add(new RepositoryPluginManifest(path, manifest));
+                }
+            }
+            catch (Exception exception) when (
+                exception is HttpRequestException or JsonException or TaskCanceledException)
+            {
+                Console.Error.WriteLine(
+                    $"Warning: could not read {repository.Slug}/{path}: {exception.Message}");
+            }
         }
 
-        plugin.LatestVersion = release.TagName;
-        var archives = release.Assets
-            .Where(asset => asset.Name.EndsWith(".zip", StringComparison.OrdinalIgnoreCase))
-            .ToList();
-        var generic = archives.Count == 1 &&
-            !ContainsAny(archives[0].Name, "x64", "amd64", "win64", "arm64", "aarch64");
-        plugin.Architectures = new ArchitectureSupport
+        return results;
+    }
+
+    private static string? SelectManifestIcon(
+        GitHubRepository repository,
+        IReadOnlyList<string> treePaths,
+        IReadOnlyList<RepositoryPluginManifest> manifests,
+        string pluginName)
+    {
+        var normalizedPluginName = NormalizeName(pluginName);
+        var candidates = manifests
+            .Select(manifest => new
+            {
+                Manifest = manifest,
+                Score = ScoreManifest(manifest, normalizedPluginName),
+            })
+            .Where(candidate => candidate.Score > 0)
+            .OrderByDescending(candidate => candidate.Score)
+            .Select(candidate => candidate.Manifest);
+        foreach (var candidate in candidates)
         {
-            X64 = generic || archives.Any(asset => ContainsAny(asset.Name, "x64", "amd64", "win64")),
-            Arm64 = generic || archives.Any(asset => ContainsAny(asset.Name, "arm64", "aarch64")),
-        };
+            var relativeIcon = candidate.Manifest.IconPathDark ?? candidate.Manifest.IconPathLight;
+            if (!IsSafeRepositoryRelativePath(relativeIcon))
+            {
+                continue;
+            }
+
+            var directory = Path.GetDirectoryName(candidate.Path)?.Replace('\\', '/') ?? string.Empty;
+            var combined = string.Join(
+                '/',
+                new[] { directory, relativeIcon!.Replace('\\', '/') }
+                    .Where(part => part.Length > 0)
+                    .SelectMany(part => part.Split('/', StringSplitOptions.RemoveEmptyEntries))
+                    .Where(part => part != "."));
+            var actualPath = treePaths.FirstOrDefault(
+                path => string.Equals(path, combined, StringComparison.OrdinalIgnoreCase));
+            if (actualPath is not null)
+            {
+                return RawUrl(repository, actualPath);
+            }
+        }
+
+        return null;
+    }
+
+    private static int ScoreManifest(RepositoryPluginManifest candidate, string normalizedPluginName)
+    {
+        var normalizedManifestName = NormalizeName(candidate.Manifest.Name);
+        var normalizedPath = NormalizeName(candidate.Path);
+        var score = normalizedManifestName == normalizedPluginName ? 200 : 0;
+        if (normalizedManifestName.Length > 0 &&
+            (normalizedManifestName.Contains(normalizedPluginName, StringComparison.Ordinal) ||
+             normalizedPluginName.Contains(normalizedManifestName, StringComparison.Ordinal)))
+        {
+            score += 100;
+        }
+
+        if (normalizedPath.Contains("powertoysrun", StringComparison.Ordinal))
+        {
+            score += 60;
+        }
+
+        if (ContainsAny(candidate.Path, "cmdpal", "commandpalette"))
+        {
+            score -= 180;
+        }
+
+        return score;
+    }
+
+    private static bool IsSafeRepositoryRelativePath(string? value) =>
+        !string.IsNullOrWhiteSpace(value) &&
+        !value.StartsWith('/') &&
+        !value.StartsWith('\\') &&
+        !value.Split(['/', '\\']).Any(segment => segment == "..");
+
+    private static string RawUrl(GitHubRepository repository, string path)
+    {
+        var encodedPath = string.Join(
+            '/',
+            path.Replace('\\', '/')
+                .Split('/', StringSplitOptions.RemoveEmptyEntries)
+                .Select(Uri.EscapeDataString));
+        return $"https://raw.githubusercontent.com/{repository.Slug}/HEAD/{encodedPath}";
+    }
+
+    private static string NormalizeName(string value) =>
+        string.Concat(value.Where(char.IsLetterOrDigit)).ToLowerInvariant();
+
+    private static async Task EnrichReleaseAsync(HttpClient httpClient, PluginCatalogEntry plugin)
+    {
+        try
+        {
+            using var response = await httpClient.GetAsync(
+                $"https://api.github.com/repos/{plugin.RepositorySlug}/releases/latest");
+            if (!response.IsSuccessStatusCode)
+            {
+                return;
+            }
+
+            await using var stream = await response.Content.ReadAsStreamAsync();
+            var release = await JsonSerializer.DeserializeAsync<GitHubRelease>(stream, JsonDefaults.Options);
+            if (release is null)
+            {
+                return;
+            }
+
+            plugin.LatestVersion = release.TagName;
+            var archives = release.Assets
+                .Where(asset => asset.Name.EndsWith(".zip", StringComparison.OrdinalIgnoreCase))
+                .ToList();
+            var generic = archives.Count == 1 &&
+                !ContainsAny(archives[0].Name, "x64", "amd64", "win64", "arm64", "aarch64");
+            plugin.Architectures = new ArchitectureSupport
+            {
+                X64 = generic || archives.Any(asset => ContainsAny(asset.Name, "x64", "amd64", "win64")),
+                Arm64 = generic || archives.Any(asset => ContainsAny(asset.Name, "arm64", "aarch64")),
+            };
+        }
+        catch (Exception exception) when (
+            exception is HttpRequestException or JsonException or TaskCanceledException)
+        {
+            Console.Error.WriteLine(
+                $"Warning: could not read releases for {plugin.RepositorySlug}: {exception.Message}");
+        }
     }
 
     private static bool ContainsAny(string value, params string[] terms) =>
         terms.Any(term => value.Contains(term, StringComparison.OrdinalIgnoreCase));
 }
+
+internal sealed class GitHubTreeResponse
+{
+    public List<GitHubTreeItem> Tree { get; init; } = [];
+}
+
+internal sealed class GitHubTreeItem
+{
+    public string Path { get; init; } = string.Empty;
+
+    public string Type { get; init; } = string.Empty;
+}
+
+internal sealed record RepositoryPluginManifest(string Path, PluginManifest Manifest);

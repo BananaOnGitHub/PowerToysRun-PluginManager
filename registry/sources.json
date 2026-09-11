@@ -17,6 +17,57 @@
       "format": "list",
       "startHeading": "## Plugins",
       "endHeading": "## Resources"
+    },
+    {
+      "id": "ruslanlap",
+      "name": "Additional PowerToys Run plugins by ruslanlap",
+      "publicUrl": "https://github.com/ruslanlap?tab=repositories&q=PowerToysRun",
+      "kind": "discovered",
+      "format": "manual",
+      "entries": [
+        {
+          "name": "AI Prompt Generator",
+          "description": "Turn short ideas into detailed prompts using your preferred AI provider.",
+          "author": "ruslanlap",
+          "repositoryUrl": "https://github.com/ruslanlap/PowerToysRun-AIPromptGenerator",
+          "tags": ["ai", "prompts", "productivity"]
+        },
+        {
+          "name": "Bored",
+          "description": "Get quotes, jokes, exchange rates, world time, animal facts, and text transformations.",
+          "author": "ruslanlap",
+          "repositoryUrl": "https://github.com/ruslanlap/PowerToysRun-Bored",
+          "tags": ["entertainment", "utilities", "web"]
+        },
+        {
+          "name": "Package Manager",
+          "description": "Search NPM, NuGet, and PyPI packages directly from PowerToys Run.",
+          "author": "ruslanlap",
+          "repositoryUrl": "https://github.com/ruslanlap/PowerToysRun-PackageManager",
+          "tags": ["developer", "npm", "nuget", "pypi"]
+        },
+        {
+          "name": "QuickBrain",
+          "description": "Calculate, convert units, work with dates, and optionally ask AI from one command.",
+          "author": "ruslanlap",
+          "repositoryUrl": "https://github.com/ruslanlap/PowerToysRun-QuickBrain",
+          "tags": ["calculator", "conversions", "ai", "productivity"]
+        },
+        {
+          "name": "Radio",
+          "description": "Search and play more than 30,000 radio stations from around the world.",
+          "author": "ruslanlap",
+          "repositoryUrl": "https://github.com/ruslanlap/PowerToysRun-Radio",
+          "tags": ["audio", "music", "radio"]
+        },
+        {
+          "name": "StackOverflow",
+          "description": "Search Stack Overflow questions with votes, answers, and tags in the result list.",
+          "author": "ruslanlap",
+          "repositoryUrl": "https://github.com/ruslanlap/PowerToysRun-StackOverflow",
+          "tags": ["developer", "search", "stackoverflow"]
+        }
+      ]
     }
   ]
 }

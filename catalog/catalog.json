@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1",
-  "generatedAt": "2026-09-09T22:40:19.937477+00:00",
+  "generatedAt": "2026-09-11T00:16:22.9814995+00:00",
   "sources": [
     {
       "id": "microsoft",
@@ -13,9 +13,38 @@
       "name": "Awesome PowerToys Run Plugins",
       "url": "https://github.com/hlaueriksson/awesome-powertoys-run-plugins",
       "kind": "community"
+    },
+    {
+      "id": "ruslanlap",
+      "name": "Additional PowerToys Run plugins by ruslanlap",
+      "url": "https://github.com/ruslanlap?tab=repositories&q=PowerToysRun",
+      "kind": "discovered"
     }
   ],
   "plugins": [
+    {
+      "id": "ruslanlap/PowerToysRun-AIPromptGenerator:aipromptgenerator",
+      "name": "AI Prompt Generator",
+      "description": "Turn short ideas into detailed prompts using your preferred AI provider.",
+      "author": "ruslanlap",
+      "repositoryUrl": "https://github.com/ruslanlap/PowerToysRun-AIPromptGenerator",
+      "website": "https://github.com/ruslanlap/PowerToysRun-AIPromptGenerator",
+      "iconUrl": "https://raw.githubusercontent.com/ruslanlap/PowerToysRun-AIPromptGenerator/HEAD/assets/logo.png",
+      "longDescription": "AI Prompt Generator is a powerful PowerToys Run plugin that leverages AI to transform your short, rough ideas into detailed, well-structured prompts. Whether you're working with ChatGPT, Claude, or any other AI assistant, this plugin helps you craft professional-grade prompts in seconds.",
+      "screenshotUrls": [],
+      "sourceIds": [
+        "ruslanlap"
+      ],
+      "tags": [
+        "ai",
+        "productivity",
+        "prompts"
+      ],
+      "architectures": {
+        "x64": false,
+        "arm64": false
+      }
+    },
     {
       "id": "hlaueriksson/Community.PowerToys.Run.Plugins:bang",
       "name": "Bang",
@@ -23,7 +52,10 @@
       "author": "hlaueriksson",
       "repositoryUrl": "https://github.com/hlaueriksson/Community.PowerToys.Run.Plugins",
       "website": "https://github.com/hlaueriksson/Community.PowerToys.Run.Plugins",
-      "iconUrl": "https://github.com/hlaueriksson.png?size=96",
+      "iconUrl": "https://raw.githubusercontent.com/hlaueriksson/Community.PowerToys.Run.Plugins/HEAD/docs/bang.png",
+      "screenshotUrls": [
+        "https://raw.githubusercontent.com/hlaueriksson/Community.PowerToys.Run.Plugins/HEAD/docs/bang.gif"
+      ],
       "sourceIds": [
         "awesome"
       ],
@@ -40,11 +72,35 @@
       "author": "Whuihuan",
       "repositoryUrl": "https://github.com/Whuihuan/PowerToysRun-Bilibili",
       "website": "https://github.com/Whuihuan/PowerToysRun-Bilibili",
-      "iconUrl": "https://github.com/Whuihuan.png?size=96",
+      "iconUrl": "https://raw.githubusercontent.com/Whuihuan/PowerToysRun-Bilibili/HEAD/Bilibili/bilibili_logo.png",
+      "screenshotUrls": [],
       "sourceIds": [
         "microsoft"
       ],
       "tags": [],
+      "architectures": {
+        "x64": false,
+        "arm64": false
+      }
+    },
+    {
+      "id": "ruslanlap/PowerToysRun-Bored:bored",
+      "name": "Bored",
+      "description": "Get quotes, jokes, exchange rates, world time, animal facts, and text transformations.",
+      "author": "ruslanlap",
+      "repositoryUrl": "https://github.com/ruslanlap/PowerToysRun-Bored",
+      "website": "https://github.com/ruslanlap/PowerToysRun-Bored",
+      "iconUrl": "https://raw.githubusercontent.com/ruslanlap/PowerToysRun-Bored/HEAD/Bored/Community.PowerToys.Run.Plugin.Bored/Images/bored.dark.png",
+      "longDescription": "Bored Plugin provides instant access to entertainment and utility features directly from PowerToys Run. Get random quotes, jokes, currency exchange rates, world time information, cat facts, dog pictures, and text transformations—all from Alt+Space → bored your query.",
+      "screenshotUrls": [],
+      "sourceIds": [
+        "ruslanlap"
+      ],
+      "tags": [
+        "entertainment",
+        "utilities",
+        "web"
+      ],
       "architectures": {
         "x64": false,
         "arm64": false
@@ -57,7 +113,8 @@
       "author": "Der-Penz",
       "repositoryUrl": "https://github.com/Der-Penz/PowerToys-Run-BrowserFavorite",
       "website": "https://github.com/Der-Penz/PowerToys-Run-BrowserFavorite",
-      "iconUrl": "https://github.com/Der-Penz.png?size=96",
+      "iconUrl": "https://raw.githubusercontent.com/Der-Penz/PowerToys-Run-BrowserFavorite/HEAD/Community.PowerToys.Run.Plugin.BrowserFavorite/Images/Url.dark.png",
+      "screenshotUrls": [],
       "sourceIds": [
         "awesome"
       ],
@@ -74,7 +131,10 @@
       "author": "TBM13",
       "repositoryUrl": "https://github.com/TBM13/BrowserSearch",
       "website": "https://github.com/TBM13/BrowserSearch",
-      "iconUrl": "https://github.com/TBM13.png?size=96",
+      "iconUrl": "https://raw.githubusercontent.com/TBM13/BrowserSearch/HEAD/BrowserSearch/Images/BrowserSearch.dark.png",
+      "screenshotUrls": [
+        "https://raw.githubusercontent.com/TBM13/BrowserSearch/HEAD/Screenshots/1.png"
+      ],
       "sourceIds": [
         "microsoft"
       ],
@@ -91,7 +151,8 @@
       "author": "skttl",
       "repositoryUrl": "https://github.com/skttl/ptrun-caniuse",
       "website": "https://github.com/skttl/ptrun-caniuse",
-      "iconUrl": "https://github.com/skttl.png?size=96",
+      "iconUrl": "https://raw.githubusercontent.com/skttl/ptrun-caniuse/HEAD/src/CanIUse/Community.PowerToys.Run.Plugin.CanIUse/Images/caniuse.dark.png",
+      "screenshotUrls": [],
       "sourceIds": [
         "microsoft"
       ],
@@ -108,7 +169,10 @@
       "author": "ferraridavide",
       "repositoryUrl": "https://github.com/ferraridavide/ChatGPTPowerToys",
       "website": "https://github.com/ferraridavide/ChatGPTPowerToys",
-      "iconUrl": "https://github.com/ferraridavide.png?size=96",
+      "iconUrl": "https://raw.githubusercontent.com/ferraridavide/ChatGPTPowerToys/HEAD/src/Community.PowerToys.Run.Plugin.ChatGPT/Images/ChatGPT.dark.png",
+      "screenshotUrls": [
+        "https://raw.githubusercontent.com/ferraridavide/ChatGPTPowerToys/HEAD/demo.gif"
+      ],
       "sourceIds": [
         "microsoft"
       ],
@@ -121,11 +185,15 @@
     {
       "id": "ruslanlap/PowerToysRun-CheatSheets:cheatsheets",
       "name": "CheatSheets",
-      "description": "\ud83d\udcda Find cheat sheets and command examples instantly from tldr pages, cheat.sh, and devhints.io. Features include favorites system, categories, offline mode, and smart caching.",
+      "description": "📚 Find cheat sheets and command examples instantly from tldr pages, cheat.sh, and devhints.io. Features include favorites system, categories, offline mode, and smart caching.",
       "author": "ruslanlap",
       "repositoryUrl": "https://github.com/ruslanlap/PowerToysRun-CheatSheets",
       "website": "https://github.com/ruslanlap/PowerToysRun-CheatSheets",
-      "iconUrl": "https://github.com/ruslanlap.png?size=96",
+      "iconUrl": "https://raw.githubusercontent.com/ruslanlap/PowerToysRun-CheatSheets/HEAD/assets/logo.png",
+      "longDescription": "CheatSheets keeps command references at your fingertips directly inside PowerToys Run. Search across tldr pages, cheat.sh, devhints.io, and offline documentation with fuzzy matching, smart caching, and zero browser context switching. Launch PowerToys Run with Alt+Space, type cs (or your custom keyword), and jump straight to the command you need.",
+      "screenshotUrls": [
+        "https://raw.githubusercontent.com/ruslanlap/PowerToysRun-CheatSheets/HEAD/assets/demo-cheatsheets.gif"
+      ],
       "sourceIds": [
         "microsoft"
       ],
@@ -142,10 +210,11 @@
       "author": "CoreyHayward",
       "repositoryUrl": "https://github.com/CoreyHayward/PowerToys-Run-ClipboardManager",
       "website": "https://github.com/CoreyHayward/PowerToys-Run-ClipboardManager",
-      "iconUrl": "https://github.com/CoreyHayward.png?size=96",
+      "iconUrl": "https://raw.githubusercontent.com/CoreyHayward/PowerToys-Run-ClipboardManager/HEAD/Community.PowerToys.Run.Plugin.ClipboardManager/Images/ClipboardManager.dark.png",
+      "screenshotUrls": [],
       "sourceIds": [
-        "microsoft",
-        "awesome"
+        "awesome",
+        "microsoft"
       ],
       "tags": [],
       "architectures": {
@@ -160,10 +229,18 @@
       "author": "Advaith3600",
       "repositoryUrl": "https://github.com/Advaith3600/PowerToys-Run-Currency-Converter",
       "website": "https://github.com/Advaith3600/PowerToys-Run-Currency-Converter",
-      "iconUrl": "https://github.com/Advaith3600.png?size=96",
+      "iconUrl": "https://raw.githubusercontent.com/Advaith3600/PowerToys-Run-Currency-Converter/HEAD/Community.PowerToys.Run.Plugin.CurrencyConverter/images/icon-black-24x24.png",
+      "screenshotUrls": [
+        "https://raw.githubusercontent.com/Advaith3600/PowerToys-Run-Currency-Converter/HEAD/screenshots/screenshot1.png",
+        "https://raw.githubusercontent.com/Advaith3600/PowerToys-Run-Currency-Converter/HEAD/screenshots/screenshot2.png",
+        "https://raw.githubusercontent.com/Advaith3600/PowerToys-Run-Currency-Converter/HEAD/screenshots/screenshot3.png",
+        "https://raw.githubusercontent.com/Advaith3600/PowerToys-Run-Currency-Converter/HEAD/screenshots/screenshot4.png",
+        "https://raw.githubusercontent.com/Advaith3600/PowerToys-Run-Currency-Converter/HEAD/screenshots/screenshot5.png",
+        "https://raw.githubusercontent.com/Advaith3600/PowerToys-Run-Currency-Converter/HEAD/screenshots/screenshot6.png"
+      ],
       "sourceIds": [
-        "microsoft",
-        "awesome"
+        "awesome",
+        "microsoft"
       ],
       "tags": [],
       "architectures": {
@@ -178,10 +255,15 @@
       "author": "ruslanlap",
       "repositoryUrl": "https://github.com/ruslanlap/PowerToysRun-Definition",
       "website": "https://github.com/ruslanlap/PowerToysRun-Definition",
-      "iconUrl": "https://github.com/ruslanlap.png?size=96",
+      "iconUrl": "https://raw.githubusercontent.com/ruslanlap/PowerToysRun-Definition/HEAD/data/definition.logo.png",
+      "longDescription": "Definition is a plugin for Microsoft PowerToys Run that allows you to quickly lookup word definitions, phonetics, and synonyms without leaving your keyboard. Simply type def  to fetch definitions. The plugin supports English, French (Français), Italian (Italiano), Ukrainian (Українська), and Chinese (中文) with automatic script detection — just type a word in any supported language and the plugin will prioritize results accordingly.",
+      "screenshotUrls": [
+        "https://raw.githubusercontent.com/ruslanlap/PowerToysRun-Definition/HEAD/data/demo-definition.gif",
+        "https://raw.githubusercontent.com/ruslanlap/PowerToysRun-Definition/HEAD/data/demo-definition-2.gif"
+      ],
       "sourceIds": [
-        "microsoft",
-        "awesome"
+        "awesome",
+        "microsoft"
       ],
       "tags": [],
       "architectures": {
@@ -196,7 +278,10 @@
       "author": "hlaueriksson",
       "repositoryUrl": "https://github.com/hlaueriksson/Community.PowerToys.Run.Plugins",
       "website": "https://github.com/hlaueriksson/Community.PowerToys.Run.Plugins",
-      "iconUrl": "https://github.com/hlaueriksson.png?size=96",
+      "iconUrl": "https://raw.githubusercontent.com/hlaueriksson/Community.PowerToys.Run.Plugins/HEAD/docs/dencode.png",
+      "screenshotUrls": [
+        "https://raw.githubusercontent.com/hlaueriksson/Community.PowerToys.Run.Plugins/HEAD/docs/dencode.gif"
+      ],
       "sourceIds": [
         "awesome"
       ],
@@ -213,7 +298,8 @@
       "author": "jan-jaros",
       "repositoryUrl": "https://github.com/jan-jaros/PowerToys-Run-DevDocs",
       "website": "https://github.com/jan-jaros/PowerToys-Run-DevDocs",
-      "iconUrl": "https://github.com/jan-jaros.png?size=96",
+      "iconUrl": "https://raw.githubusercontent.com/jan-jaros/PowerToys-Run-DevDocs/HEAD/Community.PowerToys.Run.Plugin.DevDocs/Images/devdocs.dark.png",
+      "screenshotUrls": [],
       "sourceIds": [
         "microsoft"
       ],
@@ -230,7 +316,10 @@
       "author": "hlaueriksson",
       "repositoryUrl": "https://github.com/hlaueriksson/Community.PowerToys.Run.Plugins",
       "website": "https://github.com/hlaueriksson/Community.PowerToys.Run.Plugins",
-      "iconUrl": "https://github.com/hlaueriksson.png?size=96",
+      "iconUrl": "https://raw.githubusercontent.com/hlaueriksson/Community.PowerToys.Run.Plugins/HEAD/docs/dice.png",
+      "screenshotUrls": [
+        "https://raw.githubusercontent.com/hlaueriksson/Community.PowerToys.Run.Plugins/HEAD/docs/dice.gif"
+      ],
       "sourceIds": [
         "awesome"
       ],
@@ -247,7 +336,12 @@
       "author": "ValleySoft",
       "repositoryUrl": "https://github.com/valley-soft/powertoys-diskanalyzer",
       "website": "https://github.com/valley-soft/powertoys-diskanalyzer",
-      "iconUrl": "https://github.com/valley-soft.png?size=96",
+      "iconUrl": "https://raw.githubusercontent.com/valley-soft/powertoys-diskanalyzer/HEAD/Images/DiskAnalyzerDark.png",
+      "screenshotUrls": [
+        "https://raw.githubusercontent.com/valley-soft/powertoys-diskanalyzer/HEAD/docs/Images/cmdpal-screenshot-1.png",
+        "https://raw.githubusercontent.com/valley-soft/powertoys-diskanalyzer/HEAD/docs/Images/cmdpal-screenshot-2.png",
+        "https://raw.githubusercontent.com/valley-soft/powertoys-diskanalyzer/HEAD/docs/Images/cmdpal-screenshot-3.png"
+      ],
       "sourceIds": [
         "microsoft"
       ],
@@ -264,7 +358,8 @@
       "author": "quachpas",
       "repositoryUrl": "https://github.com/quachpas/PowerToys-Run-EdgeWorkspaces",
       "website": "https://github.com/quachpas/PowerToys-Run-EdgeWorkspaces",
-      "iconUrl": "https://github.com/quachpas.png?size=96",
+      "iconUrl": "https://raw.githubusercontent.com/quachpas/PowerToys-Run-EdgeWorkspaces/HEAD/Images/EdgeWorkspaces.dark.png",
+      "screenshotUrls": [],
       "sourceIds": [
         "microsoft"
       ],
@@ -281,10 +376,11 @@
       "author": "davidegiacometti",
       "repositoryUrl": "https://github.com/davidegiacometti/PowerToys-Run-EdgeFavorite",
       "website": "https://github.com/davidegiacometti/PowerToys-Run-EdgeFavorite",
-      "iconUrl": "https://github.com/davidegiacometti.png?size=96",
+      "iconUrl": "https://raw.githubusercontent.com/davidegiacometti/PowerToys-Run-EdgeFavorite/HEAD/Community.PowerToys.Run.Plugin.EdgeFavorite/Images/EdgeFavorite.dark.png",
+      "screenshotUrls": [],
       "sourceIds": [
-        "microsoft",
-        "awesome"
+        "awesome",
+        "microsoft"
       ],
       "tags": [],
       "architectures": {
@@ -300,9 +396,10 @@
       "repositoryUrl": "https://github.com/lin-ycv/EverythingPowerToys",
       "website": "https://github.com/lin-ycv/EverythingPowerToys",
       "iconUrl": "https://github.com/lin-ycv.png?size=96",
+      "screenshotUrls": [],
       "sourceIds": [
-        "microsoft",
-        "awesome"
+        "awesome",
+        "microsoft"
       ],
       "tags": [],
       "architectures": {
@@ -317,7 +414,8 @@
       "author": "CCcat",
       "repositoryUrl": "https://github.com/CCcat8059/FastWeb",
       "website": "https://github.com/CCcat8059/FastWeb",
-      "iconUrl": "https://github.com/CCcat8059.png?size=96",
+      "iconUrl": "https://raw.githubusercontent.com/CCcat8059/FastWeb/HEAD/Images/FastWeb.dark.png",
+      "screenshotUrls": [],
       "sourceIds": [
         "microsoft"
       ],
@@ -334,7 +432,10 @@
       "author": "8LWXpg",
       "repositoryUrl": "https://github.com/8LWXpg/PowerToysRun-FirefoxBookmark",
       "website": "https://github.com/8LWXpg/PowerToysRun-FirefoxBookmark",
-      "iconUrl": "https://github.com/8LWXpg.png?size=96",
+      "iconUrl": "https://raw.githubusercontent.com/8LWXpg/PowerToysRun-FirefoxBookmark/HEAD/FirefoxBookmark/Images/FirefoxBookmark.dark.png",
+      "screenshotUrls": [
+        "https://raw.githubusercontent.com/8LWXpg/PowerToysRun-FirefoxBookmark/HEAD/assets/screenshot.png"
+      ],
       "sourceIds": [
         "microsoft"
       ],
@@ -351,7 +452,10 @@
       "author": "hlaueriksson",
       "repositoryUrl": "https://github.com/hlaueriksson/GEmojiSharp",
       "website": "https://github.com/hlaueriksson/GEmojiSharp",
-      "iconUrl": "https://github.com/hlaueriksson.png?size=96",
+      "iconUrl": "https://raw.githubusercontent.com/hlaueriksson/GEmojiSharp/HEAD/src/GEmojiSharp.PowerToysRun/Images/gemojisharp.dark.png",
+      "screenshotUrls": [
+        "https://raw.githubusercontent.com/hlaueriksson/GEmojiSharp/HEAD/GEmojiSharp.PowerToysRun.gif"
+      ],
       "sourceIds": [
         "awesome"
       ],
@@ -368,7 +472,10 @@
       "author": "hlaueriksson",
       "repositoryUrl": "https://github.com/hlaueriksson/GEmojiSharp",
       "website": "https://github.com/hlaueriksson/GEmojiSharp",
-      "iconUrl": "https://github.com/hlaueriksson.png?size=96",
+      "iconUrl": "https://raw.githubusercontent.com/hlaueriksson/GEmojiSharp/HEAD/src/GEmojiSharp.PowerToysRun/Images/gemojisharp.dark.png",
+      "screenshotUrls": [
+        "https://raw.githubusercontent.com/hlaueriksson/GEmojiSharp/HEAD/GEmojiSharp.PowerToysRun.gif"
+      ],
       "sourceIds": [
         "microsoft"
       ],
@@ -385,10 +492,11 @@
       "author": "8LWXpg",
       "repositoryUrl": "https://github.com/8LWXpg/PowerToysRun-GitHubRepo",
       "website": "https://github.com/8LWXpg/PowerToysRun-GitHubRepo",
-      "iconUrl": "https://github.com/8LWXpg.png?size=96",
+      "iconUrl": "https://raw.githubusercontent.com/8LWXpg/PowerToysRun-GitHubRepo/HEAD/GitHubRepo/Images/dark/GitHub.png",
+      "screenshotUrls": [],
       "sourceIds": [
-        "microsoft",
-        "awesome"
+        "awesome",
+        "microsoft"
       ],
       "tags": [],
       "architectures": {
@@ -403,10 +511,11 @@
       "author": "davidegiacometti",
       "repositoryUrl": "https://github.com/davidegiacometti/PowerToys-Run-GitKraken",
       "website": "https://github.com/davidegiacometti/PowerToys-Run-GitKraken",
-      "iconUrl": "https://github.com/davidegiacometti.png?size=96",
+      "iconUrl": "https://raw.githubusercontent.com/davidegiacometti/PowerToys-Run-GitKraken/HEAD/Community.PowerToys.Run.Plugin.GitKraken/Images/GitKraken.dark.png",
+      "screenshotUrls": [],
       "sourceIds": [
-        "microsoft",
-        "awesome"
+        "awesome",
+        "microsoft"
       ],
       "tags": [],
       "architectures": {
@@ -421,7 +530,8 @@
       "author": "8LWXpg",
       "repositoryUrl": "https://github.com/8LWXpg/PowerToysRun-HackMD",
       "website": "https://github.com/8LWXpg/PowerToysRun-HackMD",
-      "iconUrl": "https://github.com/8LWXpg.png?size=96",
+      "iconUrl": "https://raw.githubusercontent.com/8LWXpg/PowerToysRun-HackMD/HEAD/HackMD/Images/HackMD.dark.png",
+      "screenshotUrls": [],
       "sourceIds": [
         "microsoft"
       ],
@@ -438,7 +548,8 @@
       "author": "NaroZeol",
       "repositoryUrl": "https://github.com/NaroZeol/PowerHexInspector",
       "website": "https://github.com/NaroZeol/PowerHexInspector",
-      "iconUrl": "https://github.com/NaroZeol.png?size=96",
+      "iconUrl": "https://raw.githubusercontent.com/NaroZeol/PowerHexInspector/HEAD/Images/HexInspector.dark.png",
+      "screenshotUrls": [],
       "sourceIds": [
         "awesome"
       ],
@@ -455,10 +566,17 @@
       "author": "ruslanlap",
       "repositoryUrl": "https://github.com/ruslanlap/PowerToysRun-Hotkeys",
       "website": "https://github.com/ruslanlap/PowerToysRun-Hotkeys",
-      "iconUrl": "https://github.com/ruslanlap.png?size=96",
+      "iconUrl": "https://raw.githubusercontent.com/ruslanlap/PowerToysRun-Hotkeys/HEAD/assets/hotkeys.dark.png",
+      "longDescription": "Hotkeys is a powerful plugin for Microsoft PowerToys Run that lets you instantly find keyboard shortcuts for any application without leaving your keyboard. Simply type hk  to discover shortcuts from Visual Studio Code, Photoshop, Windows, and hundreds of other applications.",
+      "screenshotUrls": [
+        "https://raw.githubusercontent.com/ruslanlap/PowerToysRun-Hotkeys/HEAD/assets/demo-hotkeys.gif",
+        "https://raw.githubusercontent.com/ruslanlap/PowerToysRun-Hotkeys/HEAD/assets/demo-hotkeys2.gif",
+        "https://raw.githubusercontent.com/ruslanlap/PowerToysRun-Hotkeys/HEAD/assets/demo-hotkeys3.gif",
+        "https://raw.githubusercontent.com/ruslanlap/PowerToysRun-Hotkeys/HEAD/assets/demo-hotkeys4.gif"
+      ],
       "sourceIds": [
-        "microsoft",
-        "awesome"
+        "awesome",
+        "microsoft"
       ],
       "tags": [],
       "architectures": {
@@ -473,7 +591,10 @@
       "author": "grzhan",
       "repositoryUrl": "https://github.com/grzhan/HttpStatusCodePowerToys",
       "website": "https://github.com/grzhan/HttpStatusCodePowerToys",
-      "iconUrl": "https://github.com/grzhan.png?size=96",
+      "iconUrl": "https://raw.githubusercontent.com/grzhan/HttpStatusCodePowerToys/HEAD/Community.PowerToys.Run.Plugin.HttpStatusCodes/Images/httpstatuscodes.dark.png",
+      "screenshotUrls": [
+        "https://raw.githubusercontent.com/grzhan/HttpStatusCodePowerToys/HEAD/httpstatuscodes.gif"
+      ],
       "sourceIds": [
         "microsoft"
       ],
@@ -490,10 +611,11 @@
       "author": "CoreyHayward",
       "repositoryUrl": "https://github.com/CoreyHayward/PowerToys-Run-InputTyper",
       "website": "https://github.com/CoreyHayward/PowerToys-Run-InputTyper",
-      "iconUrl": "https://github.com/CoreyHayward.png?size=96",
+      "iconUrl": "https://raw.githubusercontent.com/CoreyHayward/PowerToys-Run-InputTyper/HEAD/Community.PowerToys.Run.Plugin.InputTyper/Images/InputTyper.dark.png",
+      "screenshotUrls": [],
       "sourceIds": [
-        "microsoft",
-        "awesome"
+        "awesome",
+        "microsoft"
       ],
       "tags": [],
       "architectures": {
@@ -508,7 +630,8 @@
       "author": "seguri",
       "repositoryUrl": "https://github.com/seguri/PowerToys-Run-JohnnyDecimal",
       "website": "https://github.com/seguri/PowerToys-Run-JohnnyDecimal",
-      "iconUrl": "https://github.com/seguri.png?size=96",
+      "iconUrl": "https://raw.githubusercontent.com/seguri/PowerToys-Run-JohnnyDecimal/HEAD/Images/icon.dark.png",
+      "screenshotUrls": [],
       "sourceIds": [
         "awesome"
       ],
@@ -525,7 +648,8 @@
       "author": "PsychodelEKS",
       "repositoryUrl": "https://github.com/PsychodelEKS/PowerToysRun-Launchy",
       "website": "https://github.com/PsychodelEKS/PowerToysRun-Launchy",
-      "iconUrl": "https://github.com/PsychodelEKS.png?size=96",
+      "iconUrl": "https://raw.githubusercontent.com/PsychodelEKS/PowerToysRun-Launchy/HEAD/Community.PowerToys.Run.Plugin.Launchy/Images/Launchy.dark.png",
+      "screenshotUrls": [],
       "sourceIds": [
         "microsoft"
       ],
@@ -543,6 +667,8 @@
       "repositoryUrl": "https://github.com/vednig/powertoys-linear",
       "website": "https://github.com/vednig/powertoys-linear",
       "iconUrl": "https://github.com/vednig.png?size=96",
+      "longDescription": "The Powertoys Linear Plugin is a tool designed to enhance your productivity by allowing users to create linear issues directly from the Powertoys Run Launcher. This plugin integrates seamlessly with the existing Powertoys environment, providing a quick and efficient way to manage your tasks.",
+      "screenshotUrls": [],
       "sourceIds": [
         "microsoft"
       ],
@@ -559,7 +685,10 @@
       "author": "Darkdriller",
       "repositoryUrl": "https://github.com/Darkdriller/PowerToys-Run-LocalLLm",
       "website": "https://github.com/Darkdriller/PowerToys-Run-LocalLLm",
-      "iconUrl": "https://github.com/Darkdriller.png?size=96",
+      "iconUrl": "https://raw.githubusercontent.com/Darkdriller/PowerToys-Run-LocalLLm/HEAD/Community.PowerToys.Run.Plugin.LocalLLM/Images/icon.png",
+      "screenshotUrls": [
+        "https://raw.githubusercontent.com/Darkdriller/PowerToys-Run-LocalLLm/HEAD/screenshots/screenshot1.png"
+      ],
       "sourceIds": [
         "awesome"
       ],
@@ -576,7 +705,8 @@
       "author": "dxn-9",
       "repositoryUrl": "https://github.com/dxn-9/prun-lorem",
       "website": "https://github.com/dxn-9/prun-lorem",
-      "iconUrl": "https://github.com/dxn-9.png?size=96",
+      "iconUrl": "https://raw.githubusercontent.com/dxn-9/prun-lorem/HEAD/src/Lorem/images/lorem-white.png",
+      "screenshotUrls": [],
       "sourceIds": [
         "awesome"
       ],
@@ -593,7 +723,10 @@
       "author": "hlaueriksson",
       "repositoryUrl": "https://github.com/hlaueriksson/Community.PowerToys.Run.Plugins",
       "website": "https://github.com/hlaueriksson/Community.PowerToys.Run.Plugins",
-      "iconUrl": "https://github.com/hlaueriksson.png?size=96",
+      "iconUrl": "https://raw.githubusercontent.com/hlaueriksson/Community.PowerToys.Run.Plugins/HEAD/docs/need.png",
+      "screenshotUrls": [
+        "https://raw.githubusercontent.com/hlaueriksson/Community.PowerToys.Run.Plugins/HEAD/docs/need.gif"
+      ],
       "sourceIds": [
         "awesome"
       ],
@@ -610,7 +743,10 @@
       "author": "tit-exe",
       "repositoryUrl": "https://github.com/tit-exe/PowerToys-Run-for-Claude",
       "website": "https://github.com/tit-exe/PowerToys-Run-for-Claude",
-      "iconUrl": "https://github.com/tit-exe.png?size=96",
+      "iconUrl": "https://raw.githubusercontent.com/tit-exe/PowerToys-Run-for-Claude/HEAD/src/Community.PowerToys.Run.Plugin.Claude/Images/newchat.dark.png",
+      "screenshotUrls": [
+        "https://raw.githubusercontent.com/tit-exe/PowerToys-Run-for-Claude/HEAD/assets/demo.gif"
+      ],
       "sourceIds": [
         "microsoft"
       ],
@@ -627,7 +763,8 @@
       "author": "artickc",
       "repositoryUrl": "https://github.com/artickc/PowerToys-Run-Antygravity",
       "website": "https://github.com/artickc/PowerToys-Run-Antygravity",
-      "iconUrl": "https://github.com/artickc.png?size=96",
+      "iconUrl": "https://raw.githubusercontent.com/artickc/PowerToys-Run-Antygravity/HEAD/Community.PowerToys.Run.Plugin.VisualStudio/Images/antigravity.png",
+      "screenshotUrls": [],
       "sourceIds": [
         "microsoft"
       ],
@@ -644,11 +781,41 @@
       "author": "VictorNoxx",
       "repositoryUrl": "https://github.com/VictorNoxx/PowerToys-Run-Cursor",
       "website": "https://github.com/VictorNoxx/PowerToys-Run-Cursor",
-      "iconUrl": "https://github.com/VictorNoxx.png?size=96",
+      "iconUrl": "https://raw.githubusercontent.com/VictorNoxx/PowerToys-Run-Cursor/HEAD/Community.PowerToys.Run.Plugin.VisualStudio/Images/cursor.png",
+      "screenshotUrls": [],
       "sourceIds": [
         "microsoft"
       ],
       "tags": [],
+      "architectures": {
+        "x64": false,
+        "arm64": false
+      }
+    },
+    {
+      "id": "ruslanlap/PowerToysRun-PackageManager:packagemanager",
+      "name": "Package Manager",
+      "description": "Search NPM, NuGet, and PyPI packages directly from PowerToys Run.",
+      "author": "ruslanlap",
+      "repositoryUrl": "https://github.com/ruslanlap/PowerToysRun-PackageManager",
+      "website": "https://github.com/ruslanlap/PowerToysRun-PackageManager",
+      "iconUrl": "https://raw.githubusercontent.com/ruslanlap/PowerToysRun-PackageManager/HEAD/assets/logo.png",
+      "screenshotUrls": [
+        "https://raw.githubusercontent.com/ruslanlap/PowerToysRun-PackageManager/HEAD/assets/gif/demo-main.gif",
+        "https://raw.githubusercontent.com/ruslanlap/PowerToysRun-PackageManager/HEAD/assets/gif/demo-package.gif",
+        "https://raw.githubusercontent.com/ruslanlap/PowerToysRun-PackageManager/HEAD/assets/gif/demo.gif",
+        "https://raw.githubusercontent.com/ruslanlap/PowerToysRun-PackageManager/HEAD/assets/gif/demo-pypi.gif",
+        "https://raw.githubusercontent.com/ruslanlap/PowerToysRun-PackageManager/HEAD/assets/Demomain.png"
+      ],
+      "sourceIds": [
+        "ruslanlap"
+      ],
+      "tags": [
+        "developer",
+        "npm",
+        "nuget",
+        "pypi"
+      ],
       "architectures": {
         "x64": false,
         "arm64": false
@@ -662,6 +829,7 @@
       "repositoryUrl": "https://github.com/0x6f677548/PowerToys-Run-PerplexitySearchShortcut",
       "website": "https://github.com/0x6f677548/PowerToys-Run-PerplexitySearchShortcut",
       "iconUrl": "https://github.com/0x6f677548.png?size=96",
+      "screenshotUrls": [],
       "sourceIds": [
         "microsoft"
       ],
@@ -674,11 +842,12 @@
     {
       "id": "Greyaircraft/PowerToysRun-PoetSearch:poetsearch",
       "name": "PoetSearch",
-      "description": "Search 78,581 classical Chinese poems (\u5168\u5510\u8bd7 + \u5168\u5b8b\u8bcd)",
+      "description": "Search 78,581 classical Chinese poems (全唐诗 + 全宋词)",
       "author": "Greyaircraft",
       "repositoryUrl": "https://github.com/Greyaircraft/PowerToysRun-PoetSearch",
       "website": "https://github.com/Greyaircraft/PowerToysRun-PoetSearch",
-      "iconUrl": "https://github.com/Greyaircraft.png?size=96",
+      "iconUrl": "https://raw.githubusercontent.com/Greyaircraft/PowerToysRun-PoetSearch/HEAD/PoetSearch/Community.PowerToys.Run.Plugin.PoetSearch/Images/poet.dark.png",
+      "screenshotUrls": [],
       "sourceIds": [
         "microsoft"
       ],
@@ -695,7 +864,11 @@
       "author": "ruslanlap",
       "repositoryUrl": "https://github.com/ruslanlap/PowerToysRun-Pomodoro",
       "website": "https://github.com/ruslanlap/PowerToysRun-Pomodoro",
-      "iconUrl": "https://github.com/ruslanlap.png?size=96",
+      "iconUrl": "https://raw.githubusercontent.com/ruslanlap/PowerToysRun-Pomodoro/HEAD/Assets/logo.png",
+      "longDescription": "Pomodoro is a plugin for Microsoft PowerToys Run that brings the popular Pomodoro Technique to your keyboard. Simply type pomodoro followed by a command like start, pause, or status to manage your productivity sessions directly from your PowerToys Run interface.",
+      "screenshotUrls": [
+        "https://raw.githubusercontent.com/ruslanlap/PowerToysRun-Pomodoro/HEAD/Assets/demo.png"
+      ],
       "sourceIds": [
         "microsoft"
       ],
@@ -712,24 +885,8 @@
       "author": "NaroZeol",
       "repositoryUrl": "https://github.com/NaroZeol/PowerHexInspector",
       "website": "https://github.com/NaroZeol/PowerHexInspector",
-      "iconUrl": "https://github.com/NaroZeol.png?size=96",
-      "sourceIds": [
-        "microsoft"
-      ],
-      "tags": [],
-      "architectures": {
-        "x64": false,
-        "arm64": false
-      }
-    },
-    {
-      "id": "KairuDeibisu/PowerToysRunPlugin1Password:powersearchfor1password",
-      "name": "PowerSearch for 1Password",
-      "description": "An unofficial plugin for searching 1Password for usernames and passwords",
-      "author": "KairuDeibisu",
-      "repositoryUrl": "https://github.com/KairuDeibisu/PowerToysRunPlugin1Password",
-      "website": "https://github.com/KairuDeibisu/PowerToysRunPlugin1Password",
-      "iconUrl": "https://github.com/KairuDeibisu.png?size=96",
+      "iconUrl": "https://raw.githubusercontent.com/NaroZeol/PowerHexInspector/HEAD/Images/HexInspector.dark.png",
+      "screenshotUrls": [],
       "sourceIds": [
         "microsoft"
       ],
@@ -747,9 +904,10 @@
       "repositoryUrl": "https://github.com/N0I0C0K/PowerTranslator",
       "website": "https://github.com/N0I0C0K/PowerTranslator",
       "iconUrl": "https://github.com/N0I0C0K.png?size=96",
+      "screenshotUrls": [],
       "sourceIds": [
-        "microsoft",
-        "awesome"
+        "awesome",
+        "microsoft"
       ],
       "tags": [],
       "architectures": {
@@ -764,26 +922,10 @@
       "author": "8LWXpg",
       "repositoryUrl": "https://github.com/8LWXpg/PowerToysRun-ProcessKiller",
       "website": "https://github.com/8LWXpg/PowerToysRun-ProcessKiller",
-      "iconUrl": "https://github.com/8LWXpg.png?size=96",
+      "iconUrl": "https://raw.githubusercontent.com/8LWXpg/PowerToysRun-ProcessKiller/HEAD/ProcessKiller/Images/ProcessKiller.dark.png",
+      "screenshotUrls": [],
       "sourceIds": [
-        "microsoft",
-        "awesome"
-      ],
-      "tags": [],
-      "architectures": {
-        "x64": false,
-        "arm64": false
-      }
-    },
-    {
-      "id": "artickc/ProjectLauncherPowerToysPlugin:projectlauncherplugin",
-      "name": "Project Launcher Plugin",
-      "description": "Access your projects using Project Launcher and PowerToys Run",
-      "author": "artickc",
-      "repositoryUrl": "https://github.com/artickc/ProjectLauncherPowerToysPlugin",
-      "website": "https://github.com/artickc/ProjectLauncherPowerToysPlugin",
-      "iconUrl": "https://github.com/artickc.png?size=96",
-      "sourceIds": [
+        "awesome",
         "microsoft"
       ],
       "tags": [],
@@ -799,7 +941,11 @@
       "author": "gtgalaxi",
       "repositoryUrl": "https://github.com/GTGalaxi/quick-lookup-ptrun",
       "website": "https://github.com/GTGalaxi/quick-lookup-ptrun",
-      "iconUrl": "https://github.com/GTGalaxi.png?size=96",
+      "iconUrl": "https://raw.githubusercontent.com/GTGalaxi/quick-lookup-ptrun/HEAD/img/ql.dark.png",
+      "screenshotUrls": [
+        "https://user-images.githubusercontent.com/10473238/231605857-2427613f-7206-4899-8d82-3c660cecfd98.gif",
+        "https://user-images.githubusercontent.com/10473238/227844315-0a865672-9eb3-4f35-afc5-d6c196fd009d.gif"
+      ],
       "sourceIds": [
         "microsoft"
       ],
@@ -816,7 +962,10 @@
       "author": "tonythethompson",
       "repositoryUrl": "https://github.com/tonythethompson/QuickShell",
       "website": "https://github.com/tonythethompson/QuickShell",
-      "iconUrl": "https://github.com/tonythethompson.png?size=96",
+      "iconUrl": "https://raw.githubusercontent.com/tonythethompson/QuickShell/HEAD/QuickShell.Run/Images/quickshell.dark.png",
+      "screenshotUrls": [
+        "https://raw.githubusercontent.com/tonythethompson/QuickShell/HEAD/QuickShell/Assets/Screenshot_3.png"
+      ],
       "sourceIds": [
         "microsoft"
       ],
@@ -833,7 +982,15 @@
       "author": "ruslanlap",
       "repositoryUrl": "https://github.com/ruslanlap/PowerToysRun-QuickAi",
       "website": "https://github.com/ruslanlap/PowerToysRun-QuickAi",
-      "iconUrl": "https://github.com/ruslanlap.png?size=96",
+      "iconUrl": "https://raw.githubusercontent.com/ruslanlap/PowerToysRun-QuickAi/HEAD/assets/logo.png",
+      "longDescription": "QuickAI brings the power of multiple AI providers directly into PowerToys Run. Get instant, streaming responses from leading AI models without leaving your workflow. Launch PowerToys Run with Alt+Space, type ai (or your custom keyword), and ask anything.",
+      "screenshotUrls": [
+        "https://raw.githubusercontent.com/ruslanlap/PowerToysRun-QuickAi/HEAD/assets/demo-ai.gif",
+        "https://raw.githubusercontent.com/ruslanlap/PowerToysRun-QuickAi/HEAD/assets/demo.png",
+        "https://raw.githubusercontent.com/ruslanlap/PowerToysRun-QuickAi/HEAD/assets/demo2.png",
+        "https://raw.githubusercontent.com/ruslanlap/PowerToysRun-QuickAi/HEAD/assets/demo3.png",
+        "https://raw.githubusercontent.com/ruslanlap/PowerToysRun-QuickAi/HEAD/assets/demo5.png"
+      ],
       "sourceIds": [
         "microsoft"
       ],
@@ -844,15 +1001,42 @@
       }
     },
     {
+      "id": "ruslanlap/PowerToysRun-QuickBrain:quickbrain",
+      "name": "QuickBrain",
+      "description": "Calculate, convert units, work with dates, and optionally ask AI from one command.",
+      "author": "ruslanlap",
+      "repositoryUrl": "https://github.com/ruslanlap/PowerToysRun-QuickBrain",
+      "website": "https://github.com/ruslanlap/PowerToysRun-QuickBrain",
+      "iconUrl": "https://raw.githubusercontent.com/ruslanlap/PowerToysRun-QuickBrain/HEAD/QuickBrain/Community.PowerToys.Run.Plugin.QuickBrain/Images/quickbrain.logo.png",
+      "longDescription": "QuickBrain is a powerful smart calculator plugin for PowerToys Run that combines advanced mathematical computations, unit conversions, date calculations, and optional AI-powered natural language processing. Get instant results without leaving your workflow.",
+      "screenshotUrls": [],
+      "sourceIds": [
+        "ruslanlap"
+      ],
+      "tags": [
+        "ai",
+        "calculator",
+        "conversions",
+        "productivity"
+      ],
+      "architectures": {
+        "x64": false,
+        "arm64": false
+      }
+    },
+    {
       "id": "ruslanlap/CommunityPowerToysRunPlugin-QuickNotes:quicknotes",
       "name": "QuickNotes",
-      "description": "Create, manage, and search notes directly from PowerToys Run.",
+      "description": "Create, manage, and search notes.",
       "author": "ruslanlap",
       "repositoryUrl": "https://github.com/ruslanlap/CommunityPowerToysRunPlugin-QuickNotes",
       "website": "https://github.com/ruslanlap/CommunityPowerToysRunPlugin-QuickNotes",
-      "iconUrl": "https://github.com/ruslanlap.png?size=96",
+      "iconUrl": "https://raw.githubusercontent.com/ruslanlap/CommunityPowerToysRunPlugin-QuickNotes/HEAD/assets/quicknotes.dark.png",
+      "longDescription": "QuickNotes is a plugin for Microsoft PowerToys Run that allows you to quickly create, manage, and search notes directly from your PowerToys Run interface. Simply type qq followed by your note text to save it, or use various commands to manage your notes collection.",
+      "screenshotUrls": [
+        "https://raw.githubusercontent.com/ruslanlap/CommunityPowerToysRunPlugin-QuickNotes/HEAD/assets/demo.gif"
+      ],
       "sourceIds": [
-        "microsoft",
         "awesome"
       ],
       "tags": [],
@@ -862,16 +1046,49 @@
       }
     },
     {
+      "id": "ruslanlap/PowerToysRun-Radio:radio",
+      "name": "Radio",
+      "description": "Search and play more than 30,000 radio stations from around the world.",
+      "author": "ruslanlap",
+      "repositoryUrl": "https://github.com/ruslanlap/PowerToysRun-Radio",
+      "website": "https://github.com/ruslanlap/PowerToysRun-Radio",
+      "iconUrl": "https://raw.githubusercontent.com/ruslanlap/PowerToysRun-Radio/HEAD/assets/radio_logo.png",
+      "longDescription": "Radio Plugin provides instant access to over 30,000 radio stations from around the world directly from PowerToys Run. Search stations by name, city, country, or genre without opening your browser. Get instant results with detailed information— all from Alt+Space → radio your query.",
+      "screenshotUrls": [
+        "https://raw.githubusercontent.com/ruslanlap/PowerToysRun-Radio/HEAD/assets/demo1.png"
+      ],
+      "sourceIds": [
+        "ruslanlap"
+      ],
+      "tags": [
+        "audio",
+        "music",
+        "radio"
+      ],
+      "architectures": {
+        "x64": false,
+        "arm64": false
+      }
+    },
+    {
       "id": "ruslanlap/PowerToysRun-RandomGen:randomgen",
       "name": "RandomGen",
-      "description": "\ud83c\udfb2 Generate random data instantly with a single keystroke. Perfect for developers, testers, designers, and anyone who needs quick access to random data. Features include secure passwords, PINs, names, business data, dates, numbers, GUIDs, color codes, and more. Especially useful for designers who need random color codes and placeholder content.",
+      "description": "🎲 Generate random data instantly with a single keystroke. Perfect for developers, testers, designers, and anyone who needs quick access to random data. Features include secure passwords, PINs, names, business data, dates, numbers, GUIDs, color codes, and more. Especially useful for designers who need random color codes and placeholder content.",
       "author": "ruslanlap",
       "repositoryUrl": "https://github.com/ruslanlap/PowerToysRun-RandomGen",
       "website": "https://github.com/ruslanlap/PowerToysRun-RandomGen",
-      "iconUrl": "https://github.com/ruslanlap.png?size=96",
+      "iconUrl": "https://raw.githubusercontent.com/ruslanlap/PowerToysRun-RandomGen/HEAD/assets/randomgen.logo.png",
+      "screenshotUrls": [
+        "https://raw.githubusercontent.com/ruslanlap/PowerToysRun-RandomGen/HEAD/assets/demo-randomgen.gif",
+        "https://raw.githubusercontent.com/ruslanlap/PowerToysRun-RandomGen/HEAD/assets/demo-randomgen-password.gif",
+        "https://raw.githubusercontent.com/ruslanlap/PowerToysRun-RandomGen/HEAD/assets/demo-randomgen-pin-color.gif",
+        "https://raw.githubusercontent.com/ruslanlap/PowerToysRun-RandomGen/HEAD/assets/demo-randomgen-address-date.gif",
+        "https://raw.githubusercontent.com/ruslanlap/PowerToysRun-RandomGen/HEAD/assets/demo-randomgen-guid.gif",
+        "https://raw.githubusercontent.com/ruslanlap/PowerToysRun-RandomGen/HEAD/assets/demo-randomgen-name.gif"
+      ],
       "sourceIds": [
-        "microsoft",
-        "awesome"
+        "awesome",
+        "microsoft"
       ],
       "tags": [],
       "architectures": {
@@ -886,7 +1103,8 @@
       "author": "anthony81799",
       "repositoryUrl": "https://github.com/anthony81799/PowerToysRun-RDP",
       "website": "https://github.com/anthony81799/PowerToysRun-RDP",
-      "iconUrl": "https://github.com/anthony81799.png?size=96",
+      "iconUrl": "https://raw.githubusercontent.com/anthony81799/PowerToysRun-RDP/HEAD/RDP/Images/screen-mirroring.dark.png",
+      "screenshotUrls": [],
       "sourceIds": [
         "microsoft"
       ],
@@ -903,10 +1121,11 @@
       "author": "Quriz",
       "repositoryUrl": "https://github.com/Quriz/PowerToysRunScoop",
       "website": "https://github.com/Quriz/PowerToysRunScoop",
-      "iconUrl": "https://github.com/Quriz.png?size=96",
+      "iconUrl": "https://raw.githubusercontent.com/Quriz/PowerToysRunScoop/HEAD/Community.PowerToys.Run.Plugin.Scoop/Images/scoop.png",
+      "screenshotUrls": [],
       "sourceIds": [
-        "microsoft",
-        "awesome"
+        "awesome",
+        "microsoft"
       ],
       "tags": [],
       "architectures": {
@@ -921,10 +1140,14 @@
       "author": "ruslanlap",
       "repositoryUrl": "https://github.com/ruslanlap/PowerToysRun-SpeedTest",
       "website": "https://github.com/ruslanlap/PowerToysRun-SpeedTest",
-      "iconUrl": "https://github.com/ruslanlap.png?size=96",
+      "iconUrl": "https://raw.githubusercontent.com/ruslanlap/PowerToysRun-SpeedTest/HEAD/SpeedTest/data/logo.png",
+      "longDescription": "SpeedTest is a PowerToys Run plugin that lets you check your internet speed instantly from your keyboard. Just type spt in PowerToys Run and launch a test—no browser required!",
+      "screenshotUrls": [
+        "https://raw.githubusercontent.com/ruslanlap/PowerToysRun-SpeedTest/HEAD/SpeedTest/data/demo-speedtest.gif"
+      ],
       "sourceIds": [
-        "microsoft",
-        "awesome"
+        "awesome",
+        "microsoft"
       ],
       "tags": [],
       "architectures": {
@@ -939,7 +1162,10 @@
       "author": "waaverecords",
       "repositoryUrl": "https://github.com/waaverecords/PowerToys-Run-Spotify",
       "website": "https://github.com/waaverecords/PowerToys-Run-Spotify",
-      "iconUrl": "https://github.com/waaverecords.png?size=96",
+      "iconUrl": "https://raw.githubusercontent.com/waaverecords/PowerToys-Run-Spotify/HEAD/images/dark/spotify.png",
+      "screenshotUrls": [
+        "https://raw.githubusercontent.com/waaverecords/PowerToys-Run-Spotify/HEAD/demo.gif"
+      ],
       "sourceIds": [
         "microsoft"
       ],
@@ -956,11 +1182,40 @@
       "author": "8LWXpg",
       "repositoryUrl": "https://github.com/8LWXpg/PowerToysRun-SSH",
       "website": "https://github.com/8LWXpg/PowerToysRun-SSH",
-      "iconUrl": "https://github.com/8LWXpg.png?size=96",
+      "iconUrl": "https://raw.githubusercontent.com/8LWXpg/PowerToysRun-SSH/HEAD/SSH/Images/SSH.dark.png",
+      "screenshotUrls": [
+        "https://raw.githubusercontent.com/8LWXpg/PowerToysRun-SSH/HEAD/assets/screenshot.png"
+      ],
       "sourceIds": [
         "microsoft"
       ],
       "tags": [],
+      "architectures": {
+        "x64": false,
+        "arm64": false
+      }
+    },
+    {
+      "id": "ruslanlap/PowerToysRun-StackOverflow:stackoverflow",
+      "name": "StackOverflow",
+      "description": "Search Stack Overflow questions with votes, answers, and tags in the result list.",
+      "author": "ruslanlap",
+      "repositoryUrl": "https://github.com/ruslanlap/PowerToysRun-StackOverflow",
+      "website": "https://github.com/ruslanlap/PowerToysRun-StackOverflow",
+      "iconUrl": "https://raw.githubusercontent.com/ruslanlap/PowerToysRun-StackOverflow/HEAD/assets/logo.png",
+      "longDescription": "StackOverflow Plugin brings the world's largest programming Q&A platform directly into PowerToys Run. Search millions of StackOverflow questions without leaving your IDE or terminal. Get instant answers with smart caching, vote counts, accepted answers, and tags—all from Alt+Space → so your question.",
+      "screenshotUrls": [
+        "https://raw.githubusercontent.com/ruslanlap/PowerToysRun-StackOverflow/HEAD/assets/demo1.png",
+        "https://raw.githubusercontent.com/ruslanlap/PowerToysRun-StackOverflow/HEAD/assets/demo2.png"
+      ],
+      "sourceIds": [
+        "ruslanlap"
+      ],
+      "tags": [
+        "developer",
+        "search",
+        "stackoverflow"
+      ],
       "architectures": {
         "x64": false,
         "arm64": false
@@ -974,9 +1229,10 @@
       "repositoryUrl": "https://github.com/Sameerjs6/powertoys-svgl",
       "website": "https://github.com/Sameerjs6/powertoys-svgl",
       "iconUrl": "https://github.com/Sameerjs6.png?size=96",
+      "screenshotUrls": [],
       "sourceIds": [
-        "microsoft",
-        "awesome"
+        "awesome",
+        "microsoft"
       ],
       "tags": [],
       "architectures": {
@@ -991,7 +1247,8 @@
       "author": "skttl",
       "repositoryUrl": "https://github.com/skttl/ptrun-tailwindcss",
       "website": "https://github.com/skttl/ptrun-tailwindcss",
-      "iconUrl": "https://github.com/skttl.png?size=96",
+      "iconUrl": "https://raw.githubusercontent.com/skttl/ptrun-tailwindcss/HEAD/src/TailwindCSS/Community.PowerToys.Run.Plugin.TailwindCSS/Images/tailwindcss.dark.png",
+      "screenshotUrls": [],
       "sourceIds": [
         "microsoft"
       ],
@@ -1008,7 +1265,8 @@
       "author": "Heck-R",
       "repositoryUrl": "https://github.com/Heck-R/PowerToys.Run.Plugin.TemplateRunner",
       "website": "https://github.com/Heck-R/PowerToys.Run.Plugin.TemplateRunner",
-      "iconUrl": "https://github.com/Heck-R.png?size=96",
+      "iconUrl": "https://raw.githubusercontent.com/Heck-R/PowerToys.Run.Plugin.TemplateRunner/HEAD/Community.PowerToys.Run.Plugin.TemplateRunner/Images/dark/main.png",
+      "screenshotUrls": [],
       "sourceIds": [
         "awesome"
       ],
@@ -1025,7 +1283,8 @@
       "author": "CoreyHayward",
       "repositoryUrl": "https://github.com/CoreyHayward/PowerToys-Run-Timer",
       "website": "https://github.com/CoreyHayward/PowerToys-Run-Timer",
-      "iconUrl": "https://github.com/CoreyHayward.png?size=96",
+      "iconUrl": "https://raw.githubusercontent.com/CoreyHayward/PowerToys-Run-Timer/HEAD/Community.PowerToys.Run.Plugin.Timer/Images/Timer.dark.png",
+      "screenshotUrls": [],
       "sourceIds": [
         "awesome"
       ],
@@ -1042,7 +1301,10 @@
       "author": "KawaiiZapic",
       "repositoryUrl": "https://github.com/KawaiiZapic/PowertoysRunTOTP",
       "website": "https://github.com/KawaiiZapic/PowertoysRunTOTP",
-      "iconUrl": "https://github.com/KawaiiZapic.png?size=96",
+      "iconUrl": "https://raw.githubusercontent.com/KawaiiZapic/PowertoysRunTOTP/HEAD/Community.PowerToys.Run.Plugin.TOTP/images/icon-dark.png",
+      "screenshotUrls": [
+        "https://raw.githubusercontent.com/KawaiiZapic/PowertoysRunTOTP/HEAD/screenshot.png"
+      ],
       "sourceIds": [
         "awesome"
       ],
@@ -1059,7 +1321,10 @@
       "author": "hlaueriksson",
       "repositoryUrl": "https://github.com/hlaueriksson/Community.PowerToys.Run.Plugins",
       "website": "https://github.com/hlaueriksson/Community.PowerToys.Run.Plugins",
-      "iconUrl": "https://github.com/hlaueriksson.png?size=96",
+      "iconUrl": "https://raw.githubusercontent.com/hlaueriksson/Community.PowerToys.Run.Plugins/HEAD/docs/twitch.png",
+      "screenshotUrls": [
+        "https://raw.githubusercontent.com/hlaueriksson/Community.PowerToys.Run.Plugins/HEAD/docs/twitch.gif"
+      ],
       "sourceIds": [
         "awesome"
       ],
@@ -1076,10 +1341,11 @@
       "author": "nathancartlidge",
       "repositoryUrl": "https://github.com/nathancartlidge/powertoys-run-unicode",
       "website": "https://github.com/nathancartlidge/powertoys-run-unicode",
-      "iconUrl": "https://github.com/nathancartlidge.png?size=96",
+      "iconUrl": "https://raw.githubusercontent.com/nathancartlidge/powertoys-run-unicode/HEAD/src/Community.PowerToys.Run.Plugin.UnicodeInput/images/agda.dark.png",
+      "screenshotUrls": [],
       "sourceIds": [
-        "microsoft",
-        "awesome"
+        "awesome",
+        "microsoft"
       ],
       "tags": [],
       "architectures": {
@@ -1094,7 +1360,10 @@
       "author": "Fefedu973",
       "repositoryUrl": "https://github.com/Fefedu973/PowerToys-Run-Universal-Search-Suggestions-Plugin",
       "website": "https://github.com/Fefedu973/PowerToys-Run-Universal-Search-Suggestions-Plugin",
-      "iconUrl": "https://github.com/Fefedu973.png?size=96",
+      "iconUrl": "https://raw.githubusercontent.com/Fefedu973/PowerToys-Run-Universal-Search-Suggestions-Plugin/HEAD/src/Images/Universal_Search_Suggestions_Plugin.dark.png",
+      "screenshotUrls": [
+        "https://raw.githubusercontent.com/Fefedu973/PowerToys-Run-Universal-Search-Suggestions-Plugin/HEAD/images/preview.gif"
+      ],
       "sourceIds": [
         "awesome"
       ],
@@ -1111,7 +1380,11 @@
       "author": "ruslanlap",
       "repositoryUrl": "https://github.com/ruslanlap/PowerToysRun-VideoDownloader",
       "website": "https://github.com/ruslanlap/PowerToysRun-VideoDownloader",
-      "iconUrl": "https://github.com/ruslanlap.png?size=96",
+      "iconUrl": "https://raw.githubusercontent.com/ruslanlap/PowerToysRun-VideoDownloader/HEAD/VideoDownloader/Community.PowerToys.Run.Plugin.VideoDownloader/Images/videodownloader.dark.png",
+      "longDescription": "VideoDownloader seamlessly integrates video downloading into PowerToys Run. Type dl followed by any video URL and download instantly—no browser, no extra tools, just pure productivity.\n\n⚠️ Educational purposes only. Respect copyright laws and platform terms of service. This tool doesn't bypass DRM or paid content restrictions.",
+      "screenshotUrls": [
+        "https://raw.githubusercontent.com/ruslanlap/PowerToysRun-VideoDownloader/HEAD/assets/demo-videodownloader.gif"
+      ],
       "sourceIds": [
         "awesome"
       ],
@@ -1128,7 +1401,8 @@
       "author": "davidegiacometti",
       "repositoryUrl": "https://github.com/davidegiacometti/PowerToys-Run-VisualStudio",
       "website": "https://github.com/davidegiacometti/PowerToys-Run-VisualStudio",
-      "iconUrl": "https://github.com/davidegiacometti.png?size=96",
+      "iconUrl": "https://raw.githubusercontent.com/davidegiacometti/PowerToys-Run-VisualStudio/HEAD/Community.PowerToys.Run.Plugin.VisualStudio/Images/VisualStudio.dark.png",
+      "screenshotUrls": [],
       "sourceIds": [
         "microsoft"
       ],
@@ -1145,7 +1419,8 @@
       "author": "davidegiacometti",
       "repositoryUrl": "https://github.com/davidegiacometti/PowerToys-Run-VisualStudio",
       "website": "https://github.com/davidegiacometti/PowerToys-Run-VisualStudio",
-      "iconUrl": "https://github.com/davidegiacometti.png?size=96",
+      "iconUrl": "https://raw.githubusercontent.com/davidegiacometti/PowerToys-Run-VisualStudio/HEAD/Community.PowerToys.Run.Plugin.VisualStudio/Images/VisualStudio.dark.png",
+      "screenshotUrls": [],
       "sourceIds": [
         "awesome"
       ],
@@ -1162,7 +1437,14 @@
       "author": "ruslanlap",
       "repositoryUrl": "https://github.com/ruslanlap/PowerToysRun-Weather",
       "website": "https://github.com/ruslanlap/PowerToysRun-Weather",
-      "iconUrl": "https://github.com/ruslanlap.png?size=96",
+      "iconUrl": "https://raw.githubusercontent.com/ruslanlap/PowerToysRun-Weather/HEAD/Assets/logo.png",
+      "longDescription": "Weather is a plugin for Microsoft PowerToys Run that allows you to quickly check weather conditions directly from your PowerToys Run interface. Simply type weather followed by a location to get real-time weather information, or set up favorite locations for instant access.",
+      "screenshotUrls": [
+        "https://raw.githubusercontent.com/ruslanlap/PowerToysRun-Weather/HEAD/Assets/Demo/demo-weather-widget.gif",
+        "https://raw.githubusercontent.com/ruslanlap/PowerToysRun-Weather/HEAD/Assets/Demo/demo-weather-city.gif",
+        "https://raw.githubusercontent.com/ruslanlap/PowerToysRun-Weather/HEAD/Assets/Demo/demo-weather-defaultlocation.gif",
+        "https://raw.githubusercontent.com/ruslanlap/PowerToysRun-Weather/HEAD/Assets/Demo/demo-weather-favorite.gif"
+      ],
       "sourceIds": [
         "microsoft"
       ],
@@ -1179,10 +1461,15 @@
       "author": "Riri",
       "repositoryUrl": "https://github.com/Daydreamer-riri/PowerToys-Run-WebSearchShortcut",
       "website": "https://github.com/Daydreamer-riri/PowerToys-Run-WebSearchShortcut",
-      "iconUrl": "https://github.com/Daydreamer-riri.png?size=96",
+      "iconUrl": "https://raw.githubusercontent.com/Daydreamer-riri/PowerToys-Run-WebSearchShortcut/HEAD/Community.PowerToys.Run.Plugin.WebSearchShortcut/Images/Search.dark.png",
+      "screenshotUrls": [
+        "https://raw.githubusercontent.com/Daydreamer-riri/PowerToys-Run-WebSearchShortcut/HEAD/ScreenShots/preview-cmdpal.gif",
+        "https://raw.githubusercontent.com/Daydreamer-riri/PowerToys-Run-WebSearchShortcut/HEAD/ScreenShots/cmdpal-add.png",
+        "https://raw.githubusercontent.com/Daydreamer-riri/PowerToys-Run-WebSearchShortcut/HEAD/ScreenShots/cmdpal-add-suggestions.png"
+      ],
       "sourceIds": [
-        "microsoft",
-        "awesome"
+        "awesome",
+        "microsoft"
       ],
       "tags": [],
       "architectures": {
@@ -1197,27 +1484,10 @@
       "author": "bostrot",
       "repositoryUrl": "https://github.com/bostrot/PowerToysRunPluginWinget",
       "website": "https://github.com/bostrot/PowerToysRunPluginWinget",
-      "iconUrl": "https://github.com/bostrot.png?size=96",
+      "iconUrl": "https://raw.githubusercontent.com/bostrot/PowerToysRunPluginWinget/HEAD/Images/Winget.dark.png",
+      "screenshotUrls": [],
       "sourceIds": [
-        "microsoft",
         "awesome"
-      ],
-      "tags": [],
-      "architectures": {
-        "x64": false,
-        "arm64": false
-      }
-    },
-    {
-      "id": "dlnilsson/Community.PowerToys.Run.Plugin.YubicoOauthOTP:yubicooauthotp",
-      "name": "YubicoOauthOTP",
-      "description": "Display generated codes from OATH accounts stored on the YubiKey in powerToys Run",
-      "author": "dlnilsson",
-      "repositoryUrl": "https://github.com/dlnilsson/Community.PowerToys.Run.Plugin.YubicoOauthOTP",
-      "website": "https://github.com/dlnilsson/Community.PowerToys.Run.Plugin.YubicoOauthOTP",
-      "iconUrl": "https://github.com/dlnilsson.png?size=96",
-      "sourceIds": [
-        "microsoft"
       ],
       "tags": [],
       "architectures": {

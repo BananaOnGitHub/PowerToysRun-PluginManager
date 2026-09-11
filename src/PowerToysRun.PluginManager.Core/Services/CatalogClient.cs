@@ -54,6 +54,20 @@ public sealed class CatalogClient(HttpClient httpClient, AppPaths paths)
             throw new JsonException($"Unsupported catalog schema '{catalog.SchemaVersion}'.");
         }
 
+        foreach (var plugin in catalog.Plugins)
+        {
+            if (!CatalogMediaUrlPolicy.IsAllowed(plugin.IconUrl))
+            {
+                plugin.IconUrl = null;
+            }
+
+            plugin.ScreenshotUrls = (plugin.ScreenshotUrls ?? [])
+                .Where(CatalogMediaUrlPolicy.IsAllowed)
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .Take(6)
+                .ToList();
+        }
+
         return catalog;
     }
 }

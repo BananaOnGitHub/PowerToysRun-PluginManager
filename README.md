@@ -35,8 +35,9 @@
 PowerToys Run Plugin Manager gives community plugins a proper home: descriptions, authors, icons,
 versions, repository links, and install status in one native Windows app.
 
-- **Discover plugins** from the two main community lists.
-- **Search the catalog** by name, author, or description.
+- **Discover plugins** from the main community lists and reviewed additions.
+- **Search the catalog** by name, author, description, or tag.
+- **Open rich plugin pages** with repository-owned icons, screenshots, descriptions, and tags.
 - **Install, update, reinstall, or remove** plugins without manually moving folders around.
 - **Queue multiple changes** and apply them with a single PowerToys restart.
 - **See locally installed plugins**, including ones that are not yet in the catalog.
@@ -108,14 +109,15 @@ closes PowerToys once, applies the full queue, and starts it again.
 
 ##  Plugin catalog
 
-The bundled catalog currently contains **70 plugins** collected from:
+The bundled catalog currently contains **73 plugins** collected from:
 
 - [Microsoft's third-party PowerToys Run plugin list](https://github.com/microsoft/PowerToys/blob/main/doc/thirdPartyRunPlugins.md)
 - [Awesome PowerToys Run Plugins](https://github.com/hlaueriksson/awesome-powertoys-run-plugins)
+- [Additional PowerToys Run plugins by ruslanlap](https://github.com/ruslanlap?tab=repositories&q=PowerToysRun)
 
-The catalog stores descriptions, authors, source provenance, repository links, GitHub avatars,
-release versions, and architecture information when available. A scheduled read-only workflow
-builds an enriched catalog artifact for review.
+The catalog stores descriptions, authors, source provenance, repository links, repository-owned
+icons and screenshots, release versions, and architecture information when available. A scheduled
+read-only workflow builds an enriched catalog artifact for review.
 
 Catalog inclusion helps people discover a plugin; it is not an endorsement. Community plugins run
 inside PowerToys under your user account, so check the linked repository before installing code you

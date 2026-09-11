@@ -5,6 +5,21 @@ All notable changes to PowerToys Run Plugin Manager are documented here. Version
 
 ## [Unreleased]
 
+### Added
+
+- Rich plugin detail pages with repository screenshots, longer descriptions, tags, and direct
+  repository links.
+- Catalog enrichment from repository READMEs, plugin manifests, and Git trees, with filtering for
+  badges and unrelated sibling projects.
+- Six additional plugins by ruslanlap: AI Prompt Generator, Bored, Package Manager, QuickBrain,
+  Radio, and StackOverflow.
+- Local installed-plugin icons and a built-in fallback when remote artwork cannot be loaded.
+
+### Changed
+
+- Reworked the gallery into cleaner, clickable WinUI-style rows with plugin actions on the detail
+  page and accessible hover and keyboard-focus states.
+
 ## [0.3.0]
 
 ### Added

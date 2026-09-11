@@ -30,6 +30,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
     private string _statusText = "Loading catalog...";
     private bool _isBusy;
     private ManagerUpdate? _availableUpdate;
+    private PluginCardViewModel? _selectedPlugin;
 
     public MainViewModel(AppPaths paths, HttpClient httpClient)
     {
@@ -44,6 +45,14 @@ public sealed class MainViewModel : INotifyPropertyChanged
     public event PropertyChangedEventHandler? PropertyChanged;
 
     public ObservableCollection<PluginCardViewModel> VisiblePlugins { get; } = [];
+
+    public PluginCardViewModel? SelectedPlugin => _selectedPlugin;
+
+    public Visibility CatalogVisibility =>
+        _selectedPlugin is null ? Visibility.Visible : Visibility.Collapsed;
+
+    public Visibility DetailVisibility =>
+        _selectedPlugin is null ? Visibility.Collapsed : Visibility.Visible;
 
     public string SearchText
     {
@@ -164,8 +173,32 @@ public sealed class MainViewModel : INotifyPropertyChanged
 
     public void SetView(CatalogView view)
     {
+        CloseDetails();
         _view = view;
         OnPropertyChanged(nameof(PageTitle));
+        Refresh();
+    }
+
+    public void ShowDetails(PluginCardViewModel plugin)
+    {
+        _selectedPlugin = plugin;
+        OnPropertyChanged(nameof(SelectedPlugin));
+        OnPropertyChanged(nameof(CatalogVisibility));
+        OnPropertyChanged(nameof(DetailVisibility));
+        StatusText = plugin.StatusLabel.Length > 0 ? plugin.StatusLabel : plugin.AuthorLine;
+    }
+
+    public void CloseDetails()
+    {
+        if (_selectedPlugin is null)
+        {
+            return;
+        }
+
+        _selectedPlugin = null;
+        OnPropertyChanged(nameof(SelectedPlugin));
+        OnPropertyChanged(nameof(CatalogVisibility));
+        OnPropertyChanged(nameof(DetailVisibility));
         Refresh();
     }
 
@@ -300,7 +333,8 @@ public sealed class MainViewModel : INotifyPropertyChanged
             (query.Length == 0 ||
              plugin.Name.Contains(query, StringComparison.OrdinalIgnoreCase) ||
              plugin.Author.Contains(query, StringComparison.OrdinalIgnoreCase) ||
-             plugin.Description.Contains(query, StringComparison.OrdinalIgnoreCase)));
+             plugin.Description.Contains(query, StringComparison.OrdinalIgnoreCase) ||
+             plugin.TagsLine.Contains(query, StringComparison.OrdinalIgnoreCase)));
 
         VisiblePlugins.Clear();
         foreach (var plugin in filtered)
@@ -347,7 +381,12 @@ public sealed class PluginCardViewModel(PluginState state) : INotifyPropertyChan
     public string Author => State.CatalogEntry.Author;
     public string AuthorLine => string.IsNullOrWhiteSpace(Author) ? "Unknown author" : $"by {Author}";
     public string RepositoryUrl => State.CatalogEntry.RepositoryUrl;
-    public string? IconUrl => State.CatalogEntry.IconUrl;
+    public string? DisplayIconUrl => ResolveInstalledIconPath() ?? State.CatalogEntry.IconUrl;
+    public string DetailsDescription => string.IsNullOrWhiteSpace(State.CatalogEntry.LongDescription)
+        ? Description
+        : State.CatalogEntry.LongDescription;
+    public IReadOnlyList<string> ScreenshotUrls => State.CatalogEntry.ScreenshotUrls;
+    public string TagsLine => string.Join("  •  ", State.CatalogEntry.Tags);
     public bool IsInstalled => State.IsInstalled;
     public bool UpdateAvailable => State.UpdateAvailable;
     public bool CanInstall => GitHubRepository.TryParse(RepositoryUrl, out _);
@@ -374,6 +413,12 @@ public sealed class PluginCardViewModel(PluginState state) : INotifyPropertyChan
         _ when State.CatalogEntry.LatestVersion is not null => $"Latest {State.CatalogEntry.LatestVersion}",
         _ => string.Empty,
     };
+    public Visibility StatusVisibility =>
+        StatusLabel.Length == 0 ? Visibility.Collapsed : Visibility.Visible;
+    public Visibility ScreenshotsVisibility =>
+        ScreenshotUrls.Count == 0 ? Visibility.Collapsed : Visibility.Visible;
+    public Visibility TagsVisibility =>
+        State.CatalogEntry.Tags.Count == 0 ? Visibility.Collapsed : Visibility.Visible;
     public Visibility RemoveVisibility => IsInstalled ? Visibility.Visible : Visibility.Collapsed;
 
     public void SetQueued(PluginTransactionKind? kind, string? targetDirectory)
@@ -388,6 +433,36 @@ public sealed class PluginCardViewModel(PluginState state) : INotifyPropertyChan
         OnPropertyChanged(nameof(PrimaryActionLabel));
         OnPropertyChanged(nameof(RemoveActionLabel));
         OnPropertyChanged(nameof(StatusLabel));
+        OnPropertyChanged(nameof(StatusVisibility));
+    }
+
+    private string? ResolveInstalledIconPath()
+    {
+        var installed = State.InstalledPlugin;
+        if (installed?.Manifest is null)
+        {
+            return null;
+        }
+
+        foreach (var relativePath in new[]
+        {
+            installed.Manifest.IconPathDark,
+            installed.Manifest.IconPathLight,
+        })
+        {
+            if (!InstalledPluginScanner.IsSafeRelativePath(relativePath))
+            {
+                continue;
+            }
+
+            var fullPath = Path.GetFullPath(Path.Combine(installed.DirectoryPath, relativePath!));
+            if (File.Exists(fullPath))
+            {
+                return fullPath;
+            }
+        }
+
+        return null;
     }
 
     private void OnPropertyChanged([CallerMemberName] string? propertyName = null) =>

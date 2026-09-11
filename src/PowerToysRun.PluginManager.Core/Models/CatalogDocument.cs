@@ -48,13 +48,17 @@ public sealed class PluginCatalogEntry
 
     public string? Website { get; init; }
 
-    public string? IconUrl { get; init; }
+    public string? IconUrl { get; set; }
+
+    public string? LongDescription { get; set; }
+
+    public List<string> ScreenshotUrls { get; set; } = [];
 
     public string? LatestVersion { get; set; }
 
     public List<string> SourceIds { get; init; } = [];
 
-    public List<string> Tags { get; init; } = [];
+    public List<string> Tags { get; set; } = [];
 
     public ArchitectureSupport Architectures { get; set; } = new();
 

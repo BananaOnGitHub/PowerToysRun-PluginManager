@@ -57,10 +57,12 @@ public sealed class InstalledPluginScanner
         return results;
     }
 
-    internal static bool IsSafeRelativePath(string? path) =>
+    public static bool IsSafeRelativePath(string? path) =>
         !string.IsNullOrWhiteSpace(path) &&
         !Path.IsPathRooted(path) &&
-        !path.Split(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
+        !path.StartsWith('\\') &&
+        !(path.Length >= 2 && char.IsLetter(path[0]) && path[1] == ':') &&
+        !path.Replace('\\', '/').Split('/')
             .Any(segment => segment == "..");
 
     private static string? Validate(PluginManifest? manifest, string directory)
