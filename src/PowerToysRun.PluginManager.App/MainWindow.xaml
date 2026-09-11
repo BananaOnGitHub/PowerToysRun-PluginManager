@@ -13,7 +13,8 @@
         MinHeight="540"
         FontFamily="Segoe UI Variable Text, Segoe UI"
         WindowStartupLocation="CenterScreen"
-        Loaded="Window_Loaded">
+        Loaded="Window_Loaded"
+        PreviewKeyDown="Window_PreviewKeyDown">
     <Grid Background="{DynamicResource ApplicationBackgroundBrush}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="220" />
@@ -360,6 +361,66 @@
                             Content="{Binding ApplyQueueLabel}" Click="ApplyQueue_Click" />
                 </StackPanel>
             </Grid>
+        </Grid>
+
+        <Grid x:Name="ScreenshotOverlay"
+              Grid.Column="0"
+              Grid.ColumnSpan="2"
+              Panel.ZIndex="100"
+              Visibility="{Binding ScreenshotPreviewVisibility}">
+            <Border Background="#B2000000"
+                    MouseLeftButtonDown="Backdrop_MouseLeftButtonDown" />
+
+            <Border Margin="40,24"
+                    MaxWidth="960"
+                    MaxHeight="680"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                    BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                    BorderThickness="1"
+                    CornerRadius="12"
+                    Padding="16">
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="28" ShadowDepth="6" Direction="270" Opacity="0.45" />
+                </Border.Effect>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <Grid Grid.Row="0" Margin="4,0,4,12">
+                        <TextBlock VerticalAlignment="Center"
+                                   FontSize="15"
+                                   FontWeight="SemiBold"
+                                   Text="Screenshot preview" />
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                            <Button Margin="0,0,8,0"
+                                    Padding="10,5"
+                                    Content="Open in browser"
+                                    ToolTip="Open original screenshot in browser"
+                                    Click="OpenScreenshotInBrowser_Click" />
+                            <Button Padding="12,5"
+                                    Content="✕  Close"
+                                    ToolTip="Close preview (Esc)"
+                                    Click="CloseScreenshotPreview_Click" />
+                        </StackPanel>
+                    </Grid>
+
+                    <Border Grid.Row="1"
+                            CornerRadius="8"
+                            ClipToBounds="True"
+                            Background="{DynamicResource SubtleFillColorSecondaryBrush}">
+                        <Image gif:AnimationBehavior.SourceUri="{Binding PreviewScreenshotUrl}"
+                               gif:AnimationBehavior.Error="ScreenshotPreviewImage_Error"
+                               Stretch="Uniform"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               AutomationProperties.Name="Screenshot preview" />
+                    </Border>
+                </Grid>
+            </Border>
         </Grid>
     </Grid>
 </Window>

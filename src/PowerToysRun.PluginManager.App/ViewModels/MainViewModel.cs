@@ -54,6 +54,34 @@ public sealed class MainViewModel : INotifyPropertyChanged
     public Visibility DetailVisibility =>
         _selectedPlugin is null ? Visibility.Collapsed : Visibility.Visible;
 
+    public string? PreviewScreenshotUrl
+    {
+        get => _previewScreenshotUrl;
+        set
+        {
+            if (SetField(ref _previewScreenshotUrl, value))
+            {
+                OnPropertyChanged(nameof(IsScreenshotPreviewOpen));
+                OnPropertyChanged(nameof(ScreenshotPreviewVisibility));
+            }
+        }
+    }
+
+    public bool IsScreenshotPreviewOpen => !string.IsNullOrEmpty(_previewScreenshotUrl);
+
+    public Visibility ScreenshotPreviewVisibility =>
+        IsScreenshotPreviewOpen ? Visibility.Visible : Visibility.Collapsed;
+
+    public void OpenScreenshotPreview(string url)
+    {
+        PreviewScreenshotUrl = url;
+    }
+
+    public void CloseScreenshotPreview()
+    {
+        PreviewScreenshotUrl = null;
+    }
+
     public string SearchText
     {
         get => _searchText;
@@ -190,6 +218,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
 
     public void CloseDetails()
     {
+        CloseScreenshotPreview();
         if (_selectedPlugin is null)
         {
             return;

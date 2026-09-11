@@ -197,7 +197,34 @@ public partial class MainWindow : Window
     {
         if (sender is Button { Tag: string url } && Uri.TryCreate(url, UriKind.Absolute, out _))
         {
+            _viewModel.OpenScreenshotPreview(url);
+        }
+    }
+
+    private void CloseScreenshotPreview_Click(object sender, RoutedEventArgs eventArgs) =>
+        _viewModel.CloseScreenshotPreview();
+
+    private void Backdrop_MouseLeftButtonDown(object sender, MouseButtonEventArgs eventArgs) =>
+        _viewModel.CloseScreenshotPreview();
+
+    private void OpenScreenshotInBrowser_Click(object sender, RoutedEventArgs eventArgs)
+    {
+        var url = _viewModel.PreviewScreenshotUrl;
+        if (!string.IsNullOrEmpty(url) && Uri.TryCreate(url, UriKind.Absolute, out _))
+        {
             Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
+        }
+    }
+
+    private void ScreenshotPreviewImage_Error(object sender, XamlAnimatedGif.AnimationErrorEventArgs eventArgs) =>
+        eventArgs.Handled = true;
+
+    private void Window_PreviewKeyDown(object sender, KeyEventArgs eventArgs)
+    {
+        if (eventArgs.Key == Key.Escape && _viewModel.IsScreenshotPreviewOpen)
+        {
+            _viewModel.CloseScreenshotPreview();
+            eventArgs.Handled = true;
         }
     }
 

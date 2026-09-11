@@ -142,7 +142,7 @@
         <Style x:Key="ScreenshotButtonStyle" TargetType="{x:Type Button}"
                BasedOn="{StaticResource PluginCardButtonStyle}">
             <Setter Property="Margin" Value="0,0,12,12" />
-            <Setter Property="AutomationProperties.HelpText" Value="Open full-size screenshot" />
+            <Setter Property="AutomationProperties.HelpText" Value="Preview screenshot" />
         </Style>
 
         <Style TargetType="{x:Type TextBox}">
