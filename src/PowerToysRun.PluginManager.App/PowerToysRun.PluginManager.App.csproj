@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
     <ProjectReference Include="..\PowerToysRun.PluginManager.Core\PowerToysRun.PluginManager.Core.csproj" />
@@ -17,6 +17,10 @@
     <ApplicationIcon>Assets\plugin-manager.ico</ApplicationIcon>
     <NoWarn>$(NoWarn);WPF0001</NoWarn>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="XamlAnimatedGif" Version="2.3.2" />
+  </ItemGroup>
 
   <ItemGroup>
     <Resource Include="Assets\plugin-manager.png" />

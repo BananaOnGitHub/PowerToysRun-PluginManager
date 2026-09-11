@@ -382,6 +382,9 @@ public sealed class PluginCardViewModel(PluginState state) : INotifyPropertyChan
     public string AuthorLine => string.IsNullOrWhiteSpace(Author) ? "Unknown author" : $"by {Author}";
     public string RepositoryUrl => State.CatalogEntry.RepositoryUrl;
     public string? DisplayIconUrl => ResolveInstalledIconPath() ?? State.CatalogEntry.IconUrl;
+    public bool HasDisplayIcon => !string.IsNullOrWhiteSpace(DisplayIconUrl);
+    public Visibility FallbackIconVisibility => HasDisplayIcon ? Visibility.Collapsed : Visibility.Visible;
+    public Visibility ImageIconVisibility => HasDisplayIcon ? Visibility.Visible : Visibility.Collapsed;
     public string DetailsDescription => string.IsNullOrWhiteSpace(State.CatalogEntry.LongDescription)
         ? Description
         : State.CatalogEntry.LongDescription;

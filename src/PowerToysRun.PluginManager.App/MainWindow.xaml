@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:gif="https://github.com/XamlAnimatedGif/XamlAnimatedGif"
         mc:Ignorable="d"
         Title="PowerToys Run Plugin Manager"
         Icon="Assets/plugin-manager.png"
@@ -13,16 +14,16 @@
         FontFamily="Segoe UI Variable Text, Segoe UI"
         WindowStartupLocation="CenterScreen"
         Loaded="Window_Loaded">
-    <Grid Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
+    <Grid Background="{DynamicResource ApplicationBackgroundBrush}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="220" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
         <Border Padding="14,20,14,16"
-                Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}"
+                Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
                 BorderThickness="0,0,1,0"
-                BorderBrush="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}">
+                BorderBrush="{DynamicResource DividerStrokeColorDefaultBrush}">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -91,8 +92,8 @@
 
                 <Border Grid.Row="1" Margin="0,14,0,0" Padding="12"
                         CornerRadius="9" BorderThickness="1"
-                        BorderBrush="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"
-                        Background="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}"
+                        BorderBrush="{DynamicResource AccentFillColorDefaultBrush}"
+                        Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
                         Visibility="{Binding UpdateVisibility}">
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -163,15 +164,17 @@
 
                                     <Border Width="54" Height="54"
                                             HorizontalAlignment="Left" VerticalAlignment="Top"
-                                            Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}"
+                                            Background="{DynamicResource SubtleFillColorSecondaryBrush}"
                                             CornerRadius="11">
                                         <Grid>
                                             <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"
                                                        FontFamily="Segoe Fluent Icons"
-                                                       FontSize="23" Opacity="0.38" Text="&#xE71D;" />
+                                                       FontSize="23" Opacity="0.38" Text="&#xE71D;"
+                                                       Visibility="{Binding FallbackIconVisibility}" />
                                             <Image Width="46" Height="46"
                                                    Source="{Binding DisplayIconUrl}"
                                                    Stretch="Uniform"
+                                                   Visibility="{Binding ImageIconVisibility}"
                                                    ImageFailed="RemoteImage_ImageFailed"
                                                    AutomationProperties.Name="{Binding Name, StringFormat={}{0} icon}" />
                                         </Grid>
@@ -186,7 +189,7 @@
                                                    Text="{Binding Description}" />
                                         <TextBlock Margin="0,6,0,0" FontSize="12"
                                                    FontWeight="SemiBold"
-                                                   Foreground="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"
+                                                   Foreground="{DynamicResource AccentFillColorDefaultBrush}"
                                                    Visibility="{Binding StatusVisibility}"
                                                    Text="{Binding StatusLabel}" />
                                     </StackPanel>
@@ -220,15 +223,17 @@
 
                         <Border Width="78" Height="78"
                                 HorizontalAlignment="Left" VerticalAlignment="Top"
-                                Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}"
+                                Background="{DynamicResource SubtleFillColorSecondaryBrush}"
                                 CornerRadius="16">
                             <Grid>
                                 <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"
                                            FontFamily="Segoe Fluent Icons"
-                                           FontSize="30" Opacity="0.38" Text="&#xE71D;" />
+                                           FontSize="30" Opacity="0.38" Text="&#xE71D;"
+                                           Visibility="{Binding SelectedPlugin.FallbackIconVisibility}" />
                                 <Image Width="66" Height="66"
                                        Source="{Binding SelectedPlugin.DisplayIconUrl}"
                                        Stretch="Uniform"
+                                       Visibility="{Binding SelectedPlugin.ImageIconVisibility}"
                                        ImageFailed="RemoteImage_ImageFailed"
                                        AutomationProperties.Name="{Binding SelectedPlugin.Name, StringFormat={}{0} icon}" />
                             </Grid>
@@ -242,7 +247,7 @@
                                        Text="{Binding SelectedPlugin.AuthorLine}" />
                             <TextBlock Margin="0,8,0,0" FontSize="13"
                                        FontWeight="SemiBold"
-                                       Foreground="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"
+                                       Foreground="{DynamicResource AccentFillColorDefaultBrush}"
                                        Visibility="{Binding SelectedPlugin.StatusVisibility}"
                                        Text="{Binding SelectedPlugin.StatusLabel}" />
                         </StackPanel>
@@ -276,9 +281,9 @@
                     <Border Margin="0,0,0,16"
                             Padding="18"
                             CornerRadius="11"
-                            Background="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}"
+                            Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
                             BorderThickness="1"
-                            BorderBrush="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}"
+                            BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
                             Visibility="{Binding SelectedPlugin.ScreenshotsVisibility}">
                         <StackPanel>
                             <TextBlock Margin="0,0,0,14" FontSize="18" FontWeight="SemiBold"
@@ -297,8 +302,9 @@
                                                 Click="Screenshot_Click">
                                             <Border Padding="1"
                                                     CornerRadius="8"
-                                                    Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
-                                                <Image Source="{Binding}"
+                                                    Background="{DynamicResource SubtleFillColorSecondaryBrush}">
+                                                <Image gif:AnimationBehavior.SourceUri="{Binding}"
+                                                       gif:AnimationBehavior.Error="ScreenshotImage_Error"
                                                        Stretch="Uniform"
                                                        ImageFailed="RemoteImage_ImageFailed"
                                                        AutomationProperties.Name="Plugin screenshot" />
@@ -312,9 +318,9 @@
 
                     <Border Padding="18"
                             CornerRadius="11"
-                            Background="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}"
+                            Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
                             BorderThickness="1"
-                            BorderBrush="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}">
+                            BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}">
                         <StackPanel>
                             <TextBlock Margin="0,0,0,12" FontSize="18" FontWeight="SemiBold"
                                        Text="Description" />

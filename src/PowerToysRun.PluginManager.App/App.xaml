@@ -7,10 +7,10 @@
         <Style TargetType="{x:Type Button}">
             <Setter Property="Padding" Value="14,7" />
             <Setter Property="MinHeight" Value="34" />
-            <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" />
-            <Setter Property="BorderBrush" Value="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" />
+            <Setter Property="Background" Value="{DynamicResource ControlFillColorDefaultBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
             <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
+            <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
             <Setter Property="HorizontalContentAlignment" Value="Center" />
             <Setter Property="VerticalContentAlignment" Value="Center" />
             <Setter Property="Template">
@@ -35,7 +35,7 @@
                             </Trigger>
                             <Trigger Property="IsKeyboardFocused" Value="True">
                                 <Setter TargetName="ButtonBorder" Property="BorderBrush"
-                                        Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" />
+                                        Value="{DynamicResource AccentFillColorDefaultBrush}" />
                                 <Setter TargetName="ButtonBorder" Property="BorderThickness" Value="2" />
                             </Trigger>
                             <Trigger Property="IsEnabled" Value="False">
@@ -49,9 +49,9 @@
 
         <Style x:Key="PrimaryButtonStyle" TargetType="{x:Type Button}"
                BasedOn="{StaticResource {x:Type Button}}">
-            <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" />
-            <Setter Property="BorderBrush" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" />
-            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.HighlightTextBrushKey}}" />
+            <Setter Property="Background" Value="{DynamicResource AccentFillColorDefaultBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource AccentFillColorDefaultBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource TextOnAccentFillColorPrimaryBrush}" />
         </Style>
 
         <Style x:Key="PluginCardButtonStyle" TargetType="{x:Type Button}">
@@ -60,7 +60,7 @@
             <Setter Property="Background" Value="Transparent" />
             <Setter Property="BorderBrush" Value="Transparent" />
             <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
+            <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
             <Setter Property="HorizontalContentAlignment" Value="Stretch" />
             <Setter Property="VerticalContentAlignment" Value="Stretch" />
             <Setter Property="FocusVisualStyle" Value="{x:Null}" />
@@ -79,15 +79,15 @@
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
                                 <Setter TargetName="CardBorder" Property="Background"
-                                        Value="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}" />
+                                        Value="{DynamicResource SubtleFillColorSecondaryBrush}" />
                                 <Setter TargetName="CardBorder" Property="BorderBrush"
-                                        Value="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" />
+                                        Value="{DynamicResource CardStrokeColorDefaultBrush}" />
                             </Trigger>
                             <Trigger Property="IsKeyboardFocused" Value="True">
                                 <Setter TargetName="CardBorder" Property="Background"
-                                        Value="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}" />
+                                        Value="{DynamicResource SubtleFillColorSecondaryBrush}" />
                                 <Setter TargetName="CardBorder" Property="BorderBrush"
-                                        Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" />
+                                        Value="{DynamicResource AccentFillColorDefaultBrush}" />
                                 <Setter TargetName="CardBorder" Property="BorderThickness" Value="2" />
                             </Trigger>
                             <Trigger Property="IsPressed" Value="True">
@@ -100,7 +100,7 @@
         </Style>
 
         <Style x:Key="NavigationRadioButtonStyle" TargetType="{x:Type RadioButton}">
-            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
+            <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
             <Setter Property="HorizontalContentAlignment" Value="Stretch" />
             <Setter Property="FocusVisualStyle" Value="{x:Null}" />
             <Setter Property="Template">
@@ -112,7 +112,7 @@
                                 <Border x:Name="SelectionBar" Width="3" Height="20" Margin="3,0,0,0"
                                         HorizontalAlignment="Left" VerticalAlignment="Center"
                                         CornerRadius="2"
-                                        Background="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"
+                                        Background="{DynamicResource AccentFillColorDefaultBrush}"
                                         Visibility="Collapsed" />
                                 <ContentPresenter Margin="16,10,12,10"
                                                   VerticalAlignment="Center"
@@ -122,16 +122,16 @@
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
                                 <Setter TargetName="NavigationBackground" Property="Background"
-                                        Value="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}" />
+                                        Value="{DynamicResource SubtleFillColorSecondaryBrush}" />
                             </Trigger>
                             <Trigger Property="IsChecked" Value="True">
                                 <Setter TargetName="NavigationBackground" Property="Background"
-                                        Value="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}" />
+                                        Value="{DynamicResource SubtleFillColorSecondaryBrush}" />
                                 <Setter TargetName="SelectionBar" Property="Visibility" Value="Visible" />
                             </Trigger>
                             <Trigger Property="IsKeyboardFocused" Value="True">
                                 <Setter TargetName="NavigationBackground" Property="BorderBrush"
-                                        Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" />
+                                        Value="{DynamicResource AccentFillColorDefaultBrush}" />
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -149,10 +149,11 @@
             <Setter Property="Padding" Value="12,8" />
             <Setter Property="MinHeight" Value="40" />
             <Setter Property="VerticalContentAlignment" Value="Center" />
-            <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" />
-            <Setter Property="BorderBrush" Value="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" />
+            <Setter Property="Background" Value="{DynamicResource ControlFillColorDefaultBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
             <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}" />
+            <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+            <Setter Property="CaretBrush" Value="{DynamicResource TextFillColorPrimaryBrush}" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type TextBox}">
@@ -167,7 +168,7 @@
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsKeyboardFocused" Value="True">
                                 <Setter TargetName="TextBoxBorder" Property="BorderBrush"
-                                        Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" />
+                                        Value="{DynamicResource AccentFillColorDefaultBrush}" />
                                 <Setter TargetName="TextBoxBorder" Property="BorderThickness" Value="2" />
                             </Trigger>
                             <Trigger Property="IsEnabled" Value="False">

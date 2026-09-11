@@ -117,6 +117,27 @@ public partial class MainWindow : Window
         else
         {
             image.Visibility = Visibility.Collapsed;
+            if (image.Parent is Grid grid)
+            {
+                var fallbackTextBlock = grid.Children.OfType<TextBlock>().FirstOrDefault();
+                if (fallbackTextBlock is not null)
+                {
+                    fallbackTextBlock.Visibility = Visibility.Visible;
+                }
+            }
+        }
+    }
+
+    private void ScreenshotImage_Error(object sender, XamlAnimatedGif.AnimationErrorEventArgs eventArgs)
+    {
+        eventArgs.Handled = true;
+        if (sender is Image image)
+        {
+            var screenshotButton = FindVisualParent<Button>(image);
+            if (screenshotButton is not null)
+            {
+                screenshotButton.Visibility = Visibility.Collapsed;
+            }
         }
     }
 
