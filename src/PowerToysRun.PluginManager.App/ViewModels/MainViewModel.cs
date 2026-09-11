@@ -31,6 +31,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
     private bool _isBusy;
     private ManagerUpdate? _availableUpdate;
     private PluginCardViewModel? _selectedPlugin;
+    private string? _previewScreenshotUrl;
 
     public MainViewModel(AppPaths paths, HttpClient httpClient)
     {
