@@ -45,6 +45,25 @@ public sealed class ManagerUpdateService(
         return new ManagerUpdate(release.TagName.TrimStart('v', 'V'), release.HtmlUrl, asset);
     }
 
+    public async Task<ManagerUpdate?> GetChannelReleaseAsync(
+        bool development,
+        CancellationToken cancellationToken = default)
+    {
+        // Switching channels is explicit, so the target may have a lower version number.
+        var release = development
+            ? await releaseClient.GetLatestDevelopmentAsync(RepositoryUrl, cancellationToken)
+            : await releaseClient.GetLatestAsync(RepositoryUrl, cancellationToken);
+        if (release is null)
+        {
+            return null;
+        }
+
+        var asset = GitHubReleaseClient.SelectManagerInstallerAsset(
+            release,
+            RuntimeInformation.OSArchitecture);
+        return new ManagerUpdate(release.TagName.TrimStart('v', 'V'), release.HtmlUrl, asset);
+    }
+
     public async Task<string> DownloadAsync(
         ManagerUpdate update,
         CancellationToken cancellationToken = default)

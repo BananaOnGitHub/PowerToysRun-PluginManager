@@ -5,6 +5,11 @@ All notable changes to PowerToys Run Plugin Manager are documented here. Version
 
 ## [Unreleased]
 
+### Added
+
+- Clickable version in the sidebar for switching between stable and development releases using
+  the matching setup installer, with a confirmation before download.
+
 ## [0.4.0]
 
 ### Added

@@ -192,6 +192,16 @@ public sealed class MainViewModel : INotifyPropertyChanged
             ? throw new InvalidOperationException("No manager update is available.")
             : _updateService.DownloadAsync(_availableUpdate, cancellationToken);
 
+    public Task<ManagerUpdate?> GetChannelReleaseAsync(
+        bool development,
+        CancellationToken cancellationToken = default) =>
+        _updateService.GetChannelReleaseAsync(development, cancellationToken);
+
+    public Task<string> DownloadManagerInstallerAsync(
+        ManagerUpdate release,
+        CancellationToken cancellationToken = default) =>
+        _updateService.DownloadAsync(release, cancellationToken);
+
     public void DismissUpdate()
     {
         _availableUpdate = null;

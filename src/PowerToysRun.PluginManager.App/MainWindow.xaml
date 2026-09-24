@@ -72,8 +72,28 @@
                 <StackPanel Grid.Row="2" Margin="6,0">
                     <TextBlock FontSize="12" Opacity="0.60" TextWrapping="Wrap"
                                Text="Queue everything you want. PowerToys only closes once, when you apply the changes." />
-                    <TextBlock x:Name="VersionLabel" Margin="0,10,0,0" FontSize="12"
-                               Opacity="0.60" TextWrapping="Wrap" />
+                    <Button x:Name="VersionButton" Margin="0,10,0,0" Padding="10,7"
+                            HorizontalContentAlignment="Stretch"
+                            AutomationProperties.Name="Switch manager release channel"
+                            Click="VersionButton_Click">
+                        <DockPanel LastChildFill="True">
+                            <TextBlock DockPanel.Dock="Right" Margin="5,0,0,0"
+                                       FontSize="12" VerticalAlignment="Center" Text="⌃" />
+                            <TextBlock x:Name="VersionLabel" FontSize="12"
+                                       VerticalAlignment="Center" TextWrapping="Wrap" />
+                        </DockPanel>
+                    </Button>
+                    <Popup x:Name="ReleaseChannelPopup" PlacementTarget="{Binding ElementName=VersionButton}"
+                           Placement="Top" VerticalOffset="-5" StaysOpen="False"
+                           AllowsTransparency="True">
+                        <Border Padding="5" CornerRadius="9" BorderThickness="1"
+                                BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                                Background="{DynamicResource CardBackgroundFillColorDefaultBrush}">
+                            <Button x:Name="SwitchReleaseButton" MinWidth="180"
+                                    HorizontalContentAlignment="Left"
+                                    Click="SwitchReleaseButton_Click" />
+                        </Border>
+                    </Popup>
                 </StackPanel>
             </Grid>
         </Border>

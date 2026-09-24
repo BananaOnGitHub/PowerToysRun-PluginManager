@@ -85,6 +85,21 @@ public sealed class CoreTests
     }
 
     [Fact]
+    public async Task ChannelSwitch_OffersTargetReleaseEvenWhenItsVersionIsLower()
+    {
+        using var client = new HttpClient(new StubReleaseHandler());
+        var updateService = new ManagerUpdateService(
+            client, new GitHubReleaseClient(client), new PowerToysRun.PluginManager.Core.AppPaths());
+
+        var stable = await updateService.GetChannelReleaseAsync(development: false);
+        var development = await updateService.GetChannelReleaseAsync(development: true);
+
+        Assert.Equal("0.3.0", stable?.Version);
+        Assert.Equal("0.4.0-dev.12", development?.Version);
+        Assert.EndsWith("Setup-win-x64.exe", development?.Asset.Name);
+    }
+
+    [Fact]
     public void ChangeQueue_ReplacesSameTargetAndBuildsOneTransaction()
     {
         using var temporary = new TemporaryDirectory();
@@ -341,7 +356,7 @@ internal sealed class StubReleaseHandler : HttpMessageHandler
     {
         var json = request.RequestUri?.AbsolutePath.EndsWith("/latest", StringComparison.Ordinal) == true
             ? """
-              {"tag_name":"v0.3.0","html_url":"https://github.com/owner/repo/releases/tag/v0.3.0","prerelease":false,"assets":[]}
+              {"tag_name":"v0.3.0","html_url":"https://github.com/owner/repo/releases/tag/v0.3.0","prerelease":false,"assets":[{"name":"PowerToysRun-PluginManager-Setup-win-x64.exe"}]}
               """
             : """
               [

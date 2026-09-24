@@ -18,6 +18,7 @@ public partial class MainWindow : Window
     private readonly HttpClient _httpClient = new();
     private readonly MainViewModel _viewModel;
     private ScrollViewer? _pluginScrollViewer;
+    private bool _isDevelopmentBuild;
 
     public MainWindow()
     {
@@ -38,9 +39,13 @@ public partial class MainWindow : Window
             .GetCustomAttribute<AssemblyInformationalVersionAttribute>()?
             .InformationalVersion ?? "0.0.0";
         var visibleVersion = version.Split('+')[0];
-        VersionLabel.Text = version.Contains("-dev.", StringComparison.OrdinalIgnoreCase)
+        _isDevelopmentBuild = version.Contains("-dev.", StringComparison.OrdinalIgnoreCase);
+        VersionLabel.Text = _isDevelopmentBuild
             ? $"Development {visibleVersion}"
             : $"Version {visibleVersion}";
+        SwitchReleaseButton.Content = _isDevelopmentBuild
+            ? "Switch to Stable Release"
+            : "Switch to Development Release";
         ApplyArguments(Environment.GetCommandLineArgs().Skip(1).ToArray());
         await _viewModel.LoadAsync();
         await _viewModel.CheckForUpdateAsync(version);
@@ -305,15 +310,7 @@ public partial class MainWindow : Window
             await _viewModel.RunBusyAsync("Downloading manager update...", async () =>
             {
                 var installerPath = await _viewModel.DownloadUpdateAsync();
-                var startInfo = new ProcessStartInfo(installerPath) { UseShellExecute = true };
-                startInfo.ArgumentList.Add("/SP-");
-                startInfo.ArgumentList.Add("/SILENT");
-                startInfo.ArgumentList.Add("/CURRENTUSER");
-                startInfo.ArgumentList.Add("/CLOSEAPPLICATIONS");
-                startInfo.ArgumentList.Add("/NORESTARTAPPLICATIONS");
-                startInfo.ArgumentList.Add("/DELETEINSTALLER=permanent");
-                Process.Start(startInfo);
-                Close();
+                StartManagerInstaller(installerPath);
             });
         }
         catch (Exception exception)
@@ -321,6 +318,86 @@ public partial class MainWindow : Window
             _viewModel.StatusText = $"Could not start the manager update: {exception.Message}";
             MessageBox.Show(_viewModel.StatusText, "Update failed", MessageBoxButton.OK, MessageBoxImage.Error);
         }
+    }
+
+    private void VersionButton_Click(object sender, RoutedEventArgs eventArgs)
+    {
+        ReleaseChannelPopup.IsOpen = !ReleaseChannelPopup.IsOpen;
+        if (ReleaseChannelPopup.IsOpen)
+        {
+            SwitchReleaseButton.Focus();
+        }
+    }
+
+    private async void SwitchReleaseButton_Click(object sender, RoutedEventArgs eventArgs)
+    {
+        ReleaseChannelPopup.IsOpen = false;
+        if (_viewModel.IsBusy)
+        {
+            return;
+        }
+
+        if (_viewModel.HasQueuedChanges)
+        {
+            MessageBox.Show(
+                "Apply or clear the queued plugin changes before switching manager releases.",
+                "Plugin changes are queued",
+                MessageBoxButton.OK,
+                MessageBoxImage.Information);
+            return;
+        }
+
+        var targetDevelopment = !_isDevelopmentBuild;
+        var targetName = targetDevelopment ? "development" : "stable";
+        if (MessageBox.Show(
+                $"Are you sure you want to switch release candidates?\n\n" +
+                $"The latest {targetName} installer will be downloaded and run. " +
+                "The manager will close during installation.",
+                "Switch manager release",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Question) != MessageBoxResult.Yes)
+        {
+            return;
+        }
+
+        try
+        {
+            await _viewModel.RunBusyAsync($"Finding latest {targetName} release...", async () =>
+            {
+                var release = await _viewModel.GetChannelReleaseAsync(targetDevelopment);
+                if (release is null)
+                {
+                    MessageBox.Show(
+                        "No development release is available yet.",
+                        "Release unavailable",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Information);
+                    return;
+                }
+
+                _viewModel.StatusText = $"Downloading {targetName} manager {release.Version}...";
+                var installerPath = await _viewModel.DownloadManagerInstallerAsync(release);
+                StartManagerInstaller(installerPath);
+            });
+        }
+        catch (Exception exception)
+        {
+            _viewModel.StatusText = $"Could not switch manager release: {exception.Message}";
+            MessageBox.Show(_viewModel.StatusText, "Switch failed", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+    }
+
+    private void StartManagerInstaller(string installerPath)
+    {
+        var startInfo = new ProcessStartInfo(installerPath) { UseShellExecute = true };
+        startInfo.ArgumentList.Add("/SP-");
+        startInfo.ArgumentList.Add("/SILENT");
+        startInfo.ArgumentList.Add("/CURRENTUSER");
+        startInfo.ArgumentList.Add("/CLOSEAPPLICATIONS");
+        startInfo.ArgumentList.Add("/NORESTARTAPPLICATIONS");
+        startInfo.ArgumentList.Add("/DELETEINSTALLER=permanent");
+        Process.Start(startInfo);
+        Close();
     }
 
     private void ViewManagerRelease_Click(object sender, RoutedEventArgs eventArgs)

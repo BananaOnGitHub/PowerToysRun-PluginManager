@@ -155,6 +155,9 @@ ARM64 setup executables on the [Releases page](https://github.com/BananaOnGitHub
 Its version looks like `0.5.0-dev.42`, and its page identifies the exact source commit. Install
 one development build to opt in; the manager will then offer newer development builds and future
 stable versions when opened. Stable installations only offer stable updates.
+Click the version at the bottom of the sidebar to switch channels. The menu opens upward and
+asks for confirmation before downloading and running the latest installer for the other channel.
+Switching back to stable can install an earlier version than the development build.
 
 ##  Building from source
 
