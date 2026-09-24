@@ -148,6 +148,14 @@ Versions follow [Semantic Versioning](https://semver.org/). `Directory.Build.pro
 of truth, and matching changes merged to `main` produce a `vX.Y.Z` tag and GitHub Release. See the
 [changelog](https://github.com/BananaOnGitHub/PowerToysRun-PluginManager/blob/main/CHANGELOG.md) for release notes.
 
+### Development builds
+
+After CI succeeds on `main`, an automated workflow publishes a prerelease with direct x64 and
+ARM64 setup executables on the [Releases page](https://github.com/BananaOnGitHub/PowerToysRun-PluginManager/releases).
+Its version looks like `0.4.0-dev.42`, and its page identifies the exact source commit. Install
+one development build to opt in; the manager will then offer newer development builds and future
+stable versions when opened. Stable installations only offer stable updates.
+
 ##  Building from source
 
 You will need the [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0).

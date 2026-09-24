@@ -29,6 +29,36 @@ public sealed class GitHubReleaseClient(HttpClient httpClient)
             ?? throw new JsonException("GitHub returned an empty release document.");
     }
 
+    public async Task<GitHubRelease?> GetLatestDevelopmentAsync(
+        string repositoryUrl,
+        CancellationToken cancellationToken = default)
+    {
+        if (!GitHubRepository.TryParse(repositoryUrl, out var repository))
+        {
+            throw new InvalidOperationException("Only GitHub-hosted repositories are supported.");
+        }
+
+        using var request = new HttpRequestMessage(
+            HttpMethod.Get,
+            $"https://api.github.com/repos/{repository.Slug}/releases?per_page=50");
+        request.Headers.UserAgent.ParseAdd("PowerToysRun-PluginManager/0.4");
+        request.Headers.Accept.ParseAdd("application/vnd.github+json");
+
+        using var response = await httpClient.SendAsync(request, cancellationToken);
+        response.EnsureSuccessStatusCode();
+        await using var stream = await response.Content.ReadAsStreamAsync(cancellationToken);
+        var releases = await JsonSerializer.DeserializeAsync<List<GitHubRelease>>(
+            stream, JsonDefaults.Options, cancellationToken)
+            ?? throw new JsonException("GitHub returned an empty release list.");
+        return releases
+            .Where(release => release.Prerelease &&
+                release.TagName.Contains("-dev.", StringComparison.OrdinalIgnoreCase))
+            .Aggregate<GitHubRelease, GitHubRelease?>(null, (latest, release) =>
+                latest is null || LooseVersionComparer.IsNewer(release.TagName, latest.TagName)
+                    ? release
+                    : latest);
+    }
+
     public static GitHubReleaseAsset SelectAsset(
         GitHubRelease release,
         Architecture architecture = Architecture.X64)

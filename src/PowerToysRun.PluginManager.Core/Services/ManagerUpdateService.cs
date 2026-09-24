@@ -16,8 +16,25 @@ public sealed class ManagerUpdateService(
         string currentVersion,
         CancellationToken cancellationToken = default)
     {
-        var release = await releaseClient.GetLatestAsync(RepositoryUrl, cancellationToken);
-        if (release.Prerelease || !LooseVersionComparer.IsNewer(release.TagName, currentVersion))
+        var developmentBuild = currentVersion.Contains("-dev.", StringComparison.OrdinalIgnoreCase);
+        var stable = await releaseClient.GetLatestAsync(RepositoryUrl, cancellationToken);
+        GitHubRelease? release = LooseVersionComparer.IsNewer(stable.TagName, currentVersion)
+            ? stable
+            : null;
+
+        if (developmentBuild)
+        {
+            var development = await releaseClient.GetLatestDevelopmentAsync(
+                RepositoryUrl, cancellationToken);
+            if (development is not null &&
+                LooseVersionComparer.IsNewer(development.TagName, currentVersion) &&
+                (release is null || LooseVersionComparer.IsNewer(development.TagName, release.TagName)))
+            {
+                release = development;
+            }
+        }
+
+        if (release is null)
         {
             return null;
         }

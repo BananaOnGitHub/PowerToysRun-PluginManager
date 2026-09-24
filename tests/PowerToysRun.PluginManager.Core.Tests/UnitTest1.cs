@@ -10,6 +10,10 @@ public sealed class CoreTests
     [InlineData("v2.0.0", "1.9.9", true)]
     [InlineData("1.0.0", "1.0.0-beta.1", true)]
     [InlineData("1.0.0-beta.2", "1.0.0", false)]
+    [InlineData("v0.4.0-dev.12", "0.4.0-dev.9+abcdef", true)]
+    [InlineData("v0.4.0-dev.9", "0.4.0-dev.12", false)]
+    [InlineData("v0.4.0", "0.4.0-dev.12", true)]
+    [InlineData("v0.4.0-dev.13", "0.4.0", false)]
     [InlineData(null, "1.0.0", false)]
     public void LooseVersionComparer_HandlesTags(
         string? candidate,
@@ -63,6 +67,21 @@ public sealed class CoreTests
         Assert.Equal(
             "PowerToysRun-PluginManager-Setup-win-arm64.exe",
             GitHubReleaseClient.SelectManagerInstallerAsset(release, Architecture.Arm64).Name);
+    }
+
+    [Fact]
+    public async Task ManagerUpdate_OnlyOffersDevelopmentBuildsToDevelopmentInstallations()
+    {
+        using var client = new HttpClient(new StubReleaseHandler());
+        var updateService = new ManagerUpdateService(
+            client, new GitHubReleaseClient(client), new PowerToysRun.PluginManager.Core.AppPaths());
+
+        var stableUpdate = await updateService.CheckAsync("0.3.0");
+        var developmentUpdate = await updateService.CheckAsync("0.4.0-dev.9+abcdef");
+
+        Assert.Null(stableUpdate);
+        Assert.Equal("0.4.0-dev.12", developmentUpdate?.Version);
+        Assert.EndsWith("Setup-win-x64.exe", developmentUpdate?.Asset.Name);
     }
 
     [Fact]
@@ -311,6 +330,29 @@ public sealed class CoreTests
         Assert.Equal(
             "https://raw.githubusercontent.com/owner/Example/HEAD/src/Example.PowerToysRun/Images/example.dark.png",
             metadata.IconUrl);
+    }
+}
+
+internal sealed class StubReleaseHandler : HttpMessageHandler
+{
+    protected override Task<HttpResponseMessage> SendAsync(
+        HttpRequestMessage request,
+        CancellationToken cancellationToken)
+    {
+        var json = request.RequestUri?.AbsolutePath.EndsWith("/latest", StringComparison.Ordinal) == true
+            ? """
+              {"tag_name":"v0.3.0","html_url":"https://github.com/owner/repo/releases/tag/v0.3.0","prerelease":false,"assets":[]}
+              """
+            : """
+              [
+                {"tag_name":"v0.4.0-dev.9","prerelease":true,"assets":[]},
+                {"tag_name":"v0.4.0-dev.12","html_url":"https://github.com/owner/repo/releases/tag/v0.4.0-dev.12","prerelease":true,"assets":[{"name":"PowerToysRun-PluginManager-Setup-win-x64.exe"}]}
+              ]
+              """;
+        return Task.FromResult(new HttpResponseMessage(System.Net.HttpStatusCode.OK)
+        {
+            Content = new StringContent(json),
+        });
     }
 }
 

@@ -69,9 +69,12 @@
                                  Checked="Navigation_Checked" />
                 </StackPanel>
 
-                <TextBlock Grid.Row="2" Margin="6,0" FontSize="12" Opacity="0.60"
-                           TextWrapping="Wrap"
-                           Text="Queue everything you want. PowerToys only closes once, when you apply the changes." />
+                <StackPanel Grid.Row="2" Margin="6,0">
+                    <TextBlock FontSize="12" Opacity="0.60" TextWrapping="Wrap"
+                               Text="Queue everything you want. PowerToys only closes once, when you apply the changes." />
+                    <TextBlock x:Name="VersionLabel" Margin="0,10,0,0" FontSize="12"
+                               Opacity="0.60" TextWrapping="Wrap" />
+                </StackPanel>
             </Grid>
         </Border>
 

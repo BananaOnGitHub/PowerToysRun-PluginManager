@@ -1,0 +1,117 @@
+name: Development release
+
+on:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: development-release
+  cancel-in-progress: false
+
+jobs:
+  prepare:
+    if: github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push'
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      sha: ${{ steps.version.outputs.sha }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+      - id: version
+        shell: bash
+        env:
+          SOURCE_SHA: ${{ github.event.workflow_run.head_sha }}
+          BUILD_NUMBER: ${{ github.event.workflow_run.run_number }}
+        run: |
+          current=$(sed -n 's:.*<Version>\([^<]*\)</Version>.*:\1:p' Directory.Build.props | head -n 1)
+          if [[ ! "$current" =~ ^([0-9]+)\.([0-9]+)\.([0-9]+)$ ]]; then
+            echo "Expected a stable version in Directory.Build.props, got '$current'." >&2
+            exit 1
+          fi
+          version="${BASH_REMATCH[1]}.$(( ${BASH_REMATCH[2]} + 1 )).0-dev.${BUILD_NUMBER}"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "sha=$SOURCE_SHA" >> "$GITHUB_OUTPUT"
+
+  package:
+    needs: prepare
+    strategy:
+      matrix:
+        include:
+          - rid: win-x64
+            platform: x64
+            installer_arch: x64
+          - rid: win-arm64
+            platform: ARM64
+            installer_arch: arm64
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.prepare.outputs.sha }}
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 10.0.x
+      - name: Publish manager
+        shell: pwsh
+        env:
+          DEV_VERSION: ${{ needs.prepare.outputs.version }}
+        run: |
+          dotnet publish src/PowerToysRun.PluginManager.App -c Release -r ${{ matrix.rid }} --self-contained true -p:Version=$env:DEV_VERSION -o artifacts/installer-input/App
+          dotnet publish src/PowerToysRun.PluginManager.Updater -c Release -r ${{ matrix.rid }} --self-contained true -p:Version=$env:DEV_VERSION -o artifacts/installer-input/App
+          dotnet publish src/PowerToysRun.PluginManager.Bootstrapper -c Release -r ${{ matrix.rid }} --self-contained true -p:Version=$env:DEV_VERSION -o artifacts/installer-input/App
+          dotnet publish src/PowerToysRun.PluginManager.RunPlugin -c Release -r ${{ matrix.rid }} --self-contained false -p:Platform=${{ matrix.platform }} -p:Version=$env:DEV_VERSION -o artifacts/installer-input/Bootstrap
+      - name: Build setup executable
+        shell: pwsh
+        env:
+          DEV_VERSION: ${{ needs.prepare.outputs.version }}
+        run: |
+          $compiler = (Get-Command ISCC.exe -ErrorAction SilentlyContinue).Source
+          if (-not $compiler) {
+            $compiler = @(
+              "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe",
+              "$env:ProgramFiles\Inno Setup 7\ISCC.exe"
+            ) | Where-Object { Test-Path $_ } | Select-Object -First 1
+          }
+          if (-not $compiler) { throw "Inno Setup compiler was not found on the runner." }
+          & $compiler "/DMyVersion=$env:DEV_VERSION" "/DMyArch=${{ matrix.installer_arch }}" "/DSourceRoot=$((Resolve-Path artifacts/installer-input).Path)" "/DOutputRoot=$((New-Item -ItemType Directory -Force artifacts/installer).FullName)" packaging/PowerToysRun.PluginManager.iss
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - uses: actions/upload-artifact@v4
+        with:
+          name: development-${{ matrix.rid }}
+          path: artifacts/installer/*.exe
+          retention-days: 7
+
+  publish:
+    needs: [prepare, package]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v5
+        with:
+          pattern: development-*
+          path: artifacts/installers
+          merge-multiple: true
+      - name: Publish prerelease for successful CI commit
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ needs.prepare.outputs.version }}
+          SOURCE_SHA: ${{ needs.prepare.outputs.sha }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          test -f artifacts/installers/PowerToysRun-PluginManager-Setup-win-x64.exe
+          test -f artifacts/installers/PowerToysRun-PluginManager-Setup-win-arm64.exe
+          gh release create "v$VERSION" artifacts/installers/*.exe \
+            --target "$SOURCE_SHA" \
+            --title "PowerToys Run Plugin Manager $VERSION" \
+            --notes "Development build from commit $SOURCE_SHA. Windows CI passed before packaging. Install this prerelease once to receive notifications about newer development builds." \
+            --prerelease --latest=false

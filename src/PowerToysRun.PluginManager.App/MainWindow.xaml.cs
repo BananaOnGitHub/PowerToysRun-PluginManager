@@ -34,9 +34,15 @@ public partial class MainWindow : Window
 
     private async void Window_Loaded(object sender, RoutedEventArgs eventArgs)
     {
+        var version = Assembly.GetExecutingAssembly()
+            .GetCustomAttribute<AssemblyInformationalVersionAttribute>()?
+            .InformationalVersion ?? "0.0.0";
+        var visibleVersion = version.Split('+')[0];
+        VersionLabel.Text = version.Contains("-dev.", StringComparison.OrdinalIgnoreCase)
+            ? $"Development {visibleVersion}"
+            : $"Version {visibleVersion}";
         ApplyArguments(Environment.GetCommandLineArgs().Skip(1).ToArray());
         await _viewModel.LoadAsync();
-        var version = Assembly.GetExecutingAssembly().GetName().Version?.ToString(3) ?? "0.0.0";
         await _viewModel.CheckForUpdateAsync(version);
     }
 

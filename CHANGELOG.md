@@ -7,6 +7,9 @@ All notable changes to PowerToys Run Plugin Manager are documented here. Version
 
 ### Added
 
+- Automatic x64 and ARM64 development prereleases from successful CI commits, with update
+  notifications for users who install a development build.
+- In-window screenshot preview with animated GIF playback.
 - Rich plugin detail pages with repository screenshots, longer descriptions, tags, and direct
   repository links.
 - Catalog enrichment from repository READMEs, plugin manifests, and Git trees, with filtering for
