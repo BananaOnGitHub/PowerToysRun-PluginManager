@@ -20,6 +20,7 @@ jobs:
     outputs:
       version: ${{ steps.version.outputs.version }}
       sha: ${{ steps.version.outputs.sha }}
+      should_publish: ${{ steps.version.outputs.should_publish }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -30,6 +31,11 @@ jobs:
           SOURCE_SHA: ${{ github.event.workflow_run.head_sha }}
           BUILD_NUMBER: ${{ github.event.workflow_run.run_number }}
         run: |
+          if ! git diff --quiet HEAD^ HEAD -- Directory.Build.props; then
+            echo "Stable version changed in this commit; skipping the matching development release."
+            echo "should_publish=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
           current=$(sed -n 's:.*<Version>\([^<]*\)</Version>.*:\1:p' Directory.Build.props | head -n 1)
           if [[ ! "$current" =~ ^([0-9]+)\.([0-9]+)\.([0-9]+)$ ]]; then
             echo "Expected a stable version in Directory.Build.props, got '$current'." >&2
@@ -38,9 +44,11 @@ jobs:
           version="${BASH_REMATCH[1]}.$(( ${BASH_REMATCH[2]} + 1 )).0-dev.${BUILD_NUMBER}"
           echo "version=$version" >> "$GITHUB_OUTPUT"
           echo "sha=$SOURCE_SHA" >> "$GITHUB_OUTPUT"
+          echo "should_publish=true" >> "$GITHUB_OUTPUT"
 
   package:
     needs: prepare
+    if: needs.prepare.outputs.should_publish == 'true'
     strategy:
       matrix:
         include:

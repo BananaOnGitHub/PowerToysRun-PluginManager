@@ -4,7 +4,7 @@
   "IsGlobal": false,
   "Name": "Plugin Manager",
   "Author": "BananaOnGitHub and contributors",
-  "Version": "0.3.0",
+  "Version": "0.4.0",
   "Language": "csharp",
   "Website": "https://github.com/BananaOnGitHub/PowerToysRun-PluginManager",
   "ExecuteFileName": "Community.PowerToys.Run.Plugin.PluginManager.dll",

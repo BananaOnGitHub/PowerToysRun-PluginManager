@@ -5,6 +5,8 @@ All notable changes to PowerToys Run Plugin Manager are documented here. Version
 
 ## [Unreleased]
 
+## [0.4.0]
+
 ### Added
 
 - Automatic x64 and ARM64 development prereleases from successful CI commits, with update
@@ -22,6 +24,11 @@ All notable changes to PowerToys Run Plugin Manager are documented here. Version
 
 - Reworked the gallery into cleaner, clickable WinUI-style rows with plugin actions on the detail
   page and accessible hover and keyboard-focus states.
+
+### Fixed
+
+- Dark theme colors, transparent icon fallback, and animated screenshots in plugin pages.
+- Screenshot preview build availability through versioned development installers.
 
 ## [0.3.0]
 
@@ -46,5 +53,6 @@ All notable changes to PowerToys Run Plugin Manager are documented here. Version
 - Narrow-window text wrapping, card clipping, button styling, and overly fast scrolling.
 - Duplicate CI runs for pull-request branches.
 
-[Unreleased]: https://github.com/BananaOnGitHub/PowerToysRun-PluginManager/compare/v0.3.0...HEAD
+[Unreleased]: https://github.com/BananaOnGitHub/PowerToysRun-PluginManager/compare/v0.4.0...HEAD
+[0.4.0]: https://github.com/BananaOnGitHub/PowerToysRun-PluginManager/releases/tag/v0.4.0
 [0.3.0]: https://github.com/BananaOnGitHub/PowerToysRun-PluginManager/releases/tag/v0.3.0
